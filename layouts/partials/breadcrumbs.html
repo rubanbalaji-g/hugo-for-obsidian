@@ -1,0 +1,88 @@
+{{ if .IsPage }}
+{{- $titleMap := dict
+    "cardiology" "Cardiology"
+    "development" "Developmental Pediatrics"
+    "emergencies" "Emergencies & Critical Care"
+    "endocrinology" "Endocrinology"
+    "gastrointestinal" "Gastroenterology"
+    "genetics" "Genetics"
+    "hematology" "Hematology & Oncology"
+    "infectious diseases" "Infectious Diseases"
+    "metabolic disorders" "Metabolic Disorders"
+    "misc" "Miscellaneous Topics"
+    "neonatalogy" "Neonatology"
+    "nephrology" "Nephrology"
+    "neurology" "Neurology"
+    "neuromuscular" "Neuromuscular System"
+    "nutrition" "Nutrition"
+    "recents" "Recent Advances"
+    "respiratory" "Pulmonology"
+    "rheumatology" "Rheumatology"
+    "social pediatics" "Social Pediatrics"
+    "statistics" "Statistics"
+-}}
+{{- $iconMap := dict
+    "cardiology" "heart-pulse"
+    "development" "milestone"
+    "emergencies" "siren"
+    "endocrinology" "flask-conical"
+    "gastrointestinal" "utensils"
+    "genetics" "dna"
+    "hematology" "droplet"
+    "infectious diseases" "bug"
+    "metabolic disorders" "atom"
+    "misc" "shapes"
+    "neonatalogy" "baby"
+    "nephrology" "droplets"
+    "neurology" "brain"
+    "neuromuscular" "activity"
+    "nutrition" "apple"
+    "recents" "microscope"
+    "respiratory" "wind"
+    "rheumatology" "bone"
+    "social pediatics" "hand-heart"
+    "statistics" "bar-chart-2"
+-}}
+
+{{- $secKey := lower .Section -}}
+{{- $secKeyClean := replace $secKey "-" " " -}}
+{{- $cleanSecTitle := index $titleMap $secKeyClean | default (index $titleMap $secKey | default .Section) -}}
+{{- $secIcon := index $iconMap $secKeyClean | default (index $iconMap $secKey | default "folder") -}}
+
+{{- $rawTitle := or .Title .File.BaseFileName -}}
+{{- $isIndexPage := or .Params.isindex .Params.is_index .Params.subjectindex (eq .Params.type "index") (index .Params "folder.index") (and .Params.folder (index .Params.folder "index")) -}}
+{{- $pageDisplayTitle := $rawTitle -}}
+{{- if $isIndexPage -}}
+  {{- $pageDisplayTitle = $cleanSecTitle -}}
+{{- end -}}
+
+{{- $sectionIndex := "" -}}
+{{- with .CurrentSection -}}
+  {{- range .RegularPages -}}
+    {{- if or .Params.isindex .Params.is_index .Params.subjectindex (eq .Params.type "index") (index .Params "folder.index") (and .Params.folder (index .Params.folder "index")) -}}
+      {{- $sectionIndex = . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+<nav class="breadcrumb-trail" aria-label="Breadcrumbs">
+  <a href="{{ "/" | relURL }}">Home</a>
+  {{- if and $sectionIndex (eq .RelPermalink $sectionIndex.RelPermalink) }}
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current"><i data-lucide="{{ $secIcon }}" class="breadcrumb-lucide-icon"></i> {{ $cleanSecTitle }}</span>
+  {{- else }}
+    {{- with .CurrentSection }}
+      {{- if ne .RelPermalink "/" }}
+        <span class="breadcrumb-separator">/</span>
+        {{- if $sectionIndex }}
+          <a href="{{ $sectionIndex.RelPermalink }}" class="breadcrumb-category"><i data-lucide="{{ $secIcon }}" class="breadcrumb-lucide-icon"></i> {{ $cleanSecTitle }}</a>
+        {{- else }}
+          <a href="{{ .RelPermalink }}" class="breadcrumb-category"><i data-lucide="{{ $secIcon }}" class="breadcrumb-lucide-icon"></i> {{ $cleanSecTitle }}</a>
+        {{- end }}
+      {{- end }}
+    {{- end }}
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">{{ $pageDisplayTitle }}</span>
+  {{- end }}
+</nav>
+{{ end }}

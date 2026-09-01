@@ -1,0 +1,11 @@
+{{ if and .TableOfContents (ne .TableOfContents "<nav id=\"TableOfContents\"></nav>") }}
+<aside class="toc-wrapper">
+  <div class="toc-header">
+    <i data-lucide="list"></i>
+    <span>On this page</span>
+  </div>
+  <div class="toc-body">
+    {{ .TableOfContents }}
+  </div>
+</aside>
+{{ end }}

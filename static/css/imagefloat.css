@@ -1,0 +1,37 @@
+/* Target images where the alt text contains 'right' anywhere */
+img[alt*="right"] {
+    float: right !important;
+    margin-left: 1.5rem !important;
+    margin-bottom: 1rem !important;
+    clear: right;
+    /* Remove 'max-width' so your manual '200' width takes priority */
+}
+
+/* Target images where the alt text contains 'left' anywhere */
+img[alt*="left"] {
+    float: left !important;
+    margin-right: 1.5rem !important;
+    margin-bottom: 1rem !important;
+    clear: left;
+}
+
+/* Fix for Obsidian's internal container */
+.internal-embed.is-loaded {
+    display: inline; /* Allows the container to float with the image */
+}
+
+/* Target the image container in Live Preview */
+.markdown-source-view.mod-cm6 .cm-content img[alt*="right"],
+.markdown-source-view.mod-cm6 .cm-content .internal-embed[alt*="right"] {
+    float: right;
+    position: relative;
+    z-index: 1;
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Ensure the text line doesn't collide with the floated image */
+.markdown-source-view.mod-cm6 .cm-line:has(img[alt*="right"]),
+.markdown-source-view.mod-cm6 .cm-line:has(.internal-embed[alt*="right"]) {
+    display: block; /* Allows text to flow around the float */
+}

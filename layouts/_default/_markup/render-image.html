@@ -1,0 +1,31 @@
+{{ $src := .Destination }}
+{{ $rawAlt := .Text }}
+{{ $cleanAlt := $rawAlt }}
+{{ $width := "" }}
+{{ $floatClass := "" }}
+{{ $floatDir := "" }}
+
+{{ if in $rawAlt "|" }}
+  {{ $parts := split $rawAlt "|" }}
+  {{ $cleanAlt = index $parts 0 }}
+  {{ range $i, $part := $parts }}
+    {{ $p := trim $part " " | lower }}
+    {{ if eq $p "right" }}
+      {{ $floatClass = "float-right" }}
+      {{ $floatDir = "right" }}
+    {{ else if eq $p "left" }}
+      {{ $floatClass = "float-left" }}
+      {{ $floatDir = "left" }}
+    {{ else if findRE `^[0-9]+$` $p }}
+      {{ $width = $p }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* Append float direction to alt text to support vault img[alt*="right"] CSS */}}
+{{ $finalAlt := $cleanAlt }}
+{{ if $floatDir }}
+  {{ $finalAlt = printf "%s | %s" $cleanAlt $floatDir }}
+{{ end }}
+
+<img src="{{ $src | safeURL }}" alt="{{ $finalAlt }}" {{ with $width }}width="{{ . }}" style="max-width: {{ . }}px; width: 100%;"{{ end }} class="{{ $floatClass }}" loading="lazy" decoding="async" />

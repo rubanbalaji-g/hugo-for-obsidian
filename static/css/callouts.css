@@ -1,0 +1,91 @@
+/* Universal Callout Styling (Matches Obsidian Exactly) */
+.callout {
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border-left: 4px solid var(--accent);
+  background: var(--bg-secondary);
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Titles */
+.callout-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Color palettes */
+.callout[data-callout="green"],
+.callout[data-callout="tip"],
+.callout[data-callout="hint"],
+.callout[data-callout="success"],
+.callout[data-callout="check"],
+.callout[data-callout="done"] {
+  border-left-color: #10b981;
+  background: rgba(16, 185, 129, 0.06);
+}
+
+.callout[data-callout="red"],
+.callout[data-callout="danger"],
+.callout[data-callout="error"],
+.callout[data-callout="bug"],
+.callout[data-callout="failure"],
+.callout[data-callout="fail"] {
+  border-left-color: #ef4444;
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.callout[data-callout="orange"],
+.callout[data-callout="warning"],
+.callout[data-callout="caution"],
+.callout[data-callout="attention"] {
+  border-left-color: #f97316;
+  background: rgba(249, 115, 22, 0.06);
+}
+
+.callout[data-callout="yellow"] {
+  border-left-color: #eab308;
+  background: rgba(234, 179, 8, 0.06);
+}
+
+.callout[data-callout="blue"],
+.callout[data-callout="info"],
+.callout[data-callout="note"],
+.callout[data-callout="abstract"],
+.callout[data-callout="summary"],
+.callout[data-callout="tldr"] {
+  border-left-color: #0284c7;
+  background: rgba(2, 132, 199, 0.06);
+}
+
+.callout[data-callout="purple"],
+.callout[data-callout="important"] {
+  border-left-color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.06);
+}
+
+.callout[data-callout="pink"] {
+  border-left-color: #ec4899;
+  background: rgba(236, 72, 153, 0.06);
+}
+
+.callout-content {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.callout-content p {
+  margin-bottom: 0.6rem;
+}
+.callout-content p:last-child {
+  margin-bottom: 0;
+}

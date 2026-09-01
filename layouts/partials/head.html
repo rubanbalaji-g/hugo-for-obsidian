@@ -1,0 +1,67 @@
+{{ $pageTitle := or .Title .File.BaseFileName site.Title }}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ $pageTitle }} — {{ site.Title }}</title>
+
+<!-- Canonical & SEO -->
+<link rel="canonical" href="{{ .Permalink }}">
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description }}{{ end }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ $pageTitle }} — {{ site.Title }}">
+<meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description }}{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:image" content="{{ "/logo.svg" | absURL }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ $pageTitle }} — {{ site.Title }}">
+<meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description }}{{ end }}">
+
+<!-- Favicon -->
+<link rel="icon" href="{{ "/favicon.svg" | relURL }}" type="image/svg+xml">
+
+<!-- Typography -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..700;1,14..32,400&family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400&display=swap" rel="stylesheet">
+
+<!-- KaTeX Math -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+
+<!-- Styles with Cache Busting -->
+<link rel="stylesheet" href="{{ "/css/main.css" | relURL }}?v={{ now.Unix }}">
+<link rel="stylesheet" href="{{ "/css/things-color.css" | relURL }}?v={{ now.Unix }}">
+<link rel="stylesheet" href="{{ "/css/custom_callouts.css" | relURL }}?v={{ now.Unix }}">
+<link rel="stylesheet" href="{{ "/css/tableStyles.css" | relURL }}?v={{ now.Unix }}">
+<link rel="stylesheet" href="{{ "/css/cards.css" | relURL }}?v={{ now.Unix }}">
+<link rel="stylesheet" href="{{ "/css/label.css" | relURL }}?v={{ now.Unix }}">
+<link rel="stylesheet" href="{{ "/css/imagefloat.css" | relURL }}?v={{ now.Unix }}">
+<link rel="stylesheet" href="{{ "/css/callouts.css" | relURL }}?v={{ now.Unix }}">
+
+<!-- Lucide Icons -->
+<script defer src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+
+<!-- Schema.org Medical Entity Data -->
+{{ if .IsPage }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "headline": "{{ $pageTitle }}",
+  "url": "{{ .Permalink }}",
+  "author": {
+    "@type": "Person",
+    "name": "Dr. Rubanbalaji"
+  },
+  "audience": {
+    "@type": "MedicalAudience",
+    "medicalSpecialty": "Pediatrics"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "PediaNotes"
+  }
+}
+</script>
+{{ end }}

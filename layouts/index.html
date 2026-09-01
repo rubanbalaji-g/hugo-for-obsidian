@@ -1,0 +1,14 @@
+{{ define "main" }}
+<div class="note-container home-container">
+  <article class="clinical-note">
+    <div class="note-body-wrapper">
+      <div class="note-content cm-s-obsidian">
+        {{ partial "obsidian-content.html" . }}
+        {{ partial "footer.html" . }}
+      </div>
+
+      {{ partial "toc.html" . }}
+    </div>
+  </article>
+</div>
+{{ end }}

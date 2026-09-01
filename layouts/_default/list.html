@@ -1,0 +1,26 @@
+{{ define "main" }}
+{{ $sectionTitle := or .Title .File.BaseFileName }}
+<div class="list-container">
+  <header class="list-header">
+    <nav class="breadcrumb-trail" aria-label="Breadcrumbs">
+      <a href="{{ "/" | relURL }}">Home</a>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-current">{{ $sectionTitle }}</span>
+    </nav>
+
+    <h1 class="list-title">{{ $sectionTitle }}</h1>
+    <p class="list-count">{{ len .RegularPages }} clinical notes</p>
+  </header>
+
+  <div class="notes-grid">
+    {{ range .RegularPages.ByTitle }}
+    <a href="{{ .RelPermalink }}" class="note-card">
+      <div class="note-card-title">{{ or .Title .File.BaseFileName }}</div>
+      <div class="note-card-snippet">{{ .Plain | truncate 120 }}</div>
+    </a>
+    {{ end }}
+  </div>
+
+  {{ partial "footer.html" . }}
+</div>
+{{ end }}

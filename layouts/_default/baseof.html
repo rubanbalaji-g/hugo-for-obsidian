@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body class="theme-dark">
+  {{ partial "header.html" . }}
+  
+  <div class="site-layout has-sidebar" id="site-layout">
+    {{ partial "sidebar.html" . }}
+    <main class="main-content">
+      {{ block "main" . }}{{ end }}
+    </main>
+  </div>
+
+  {{ partial "search.html" . }}
+
+  <script src="{{ "/js/theme.js" | relURL }}"></script>
+  <script src="{{ "/js/search.js" | relURL }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

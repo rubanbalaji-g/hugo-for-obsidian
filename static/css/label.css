@@ -1,0 +1,328 @@
+/* ------------------------------------------------------------------------- */
+/* Custom fonts. Comment or change as required                               */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* ------------------------------------------------------------------------- */
+
+/* 
+
+===================================================
+==================== THANK YOU ====================
+===================================================
+
+Thanks to @DeaconLight from the Obsidian Forums, 
+I was able to create this CSS for a 
+
+--- Nutrition Facts FoodLabel ---
+
+I adapted his tableStyles CSS to create this
+Thank you, @DeaconLight!
+
+*/
+
+/* Obsidian default theme uses centered headers? */
+/* I rather not */
+table thead tr th {
+	text-align: left;
+}
+
+/*
+===================================================
+=================== Customizers ===================
+===================================================
+
+These are custom "hacks" that can be applied to any
+table (with/without custom table visual css).
+If you're already using other classes in your note,
+remember you can stack these in the cssclass 
+parameter, like:
+
+cssclass: tableClass1, hackClass2, userClass3, etc
+
+
+/* -------------------------------------------- */
+/* Make tables width same as default note width */
+/* -------------------------------------------- */
+
+.wideTable table {
+	min-width: 100%;
+}
+
+
+/* -------------------------------------------- */
+/* Left align mandatory                         */
+/* -------------------------------------------- */
+
+.leftAlign th,
+.leftAlign td {
+	text-align: left !important;  
+}
+
+
+/* -------------------------------------------- */
+/* 1st cell short text, 2nd th bigger text      */
+/* -------------------------------------------- */
+
+.fixedFc thead tr th:first-child,
+.fixedFc tbody tr td:first-child {
+	width: 8em;
+	min-width: 8em;
+	max-width: 8em;
+	word-break: break-all;
+}
+.fixedFc th:nth-child(2) {
+    padding: 9px 20px;
+    font-size: 21px;
+}
+.fixedFc td:nth-child(2),
+.fixedFc tr > td:last-of-type { 
+	white-space: nowrap;
+	overflow: hidden;
+  	text-overflow: ellipsis;
+  	max-width: 17em;
+}
+
+/* -------------------------------------------- */
+/* 1st cell big text, 2nd small.                */
+/* -------------------------------------------- */
+
+.wideFc td:nth-child(1),
+.wideFc tr > td:last-of-type { 
+	white-space: nowrap;
+	overflow: hidden;
+  	text-overflow: ellipsis;
+  	max-width: 36em;
+}
+
+/* ---------------------------------------------- */
+/* If you wanna change table margin, do it here   */
+/* ---------------------------------------------- */
+
+.customMargin table {
+	margin: 0 0 0 0;
+}
+
+/* ---------------------------------------------- */
+/* If you wanna change table padding, do it here  */
+/* ---------------------------------------------- */
+
+.customPadding table {
+	margin: 25px 25px 25px 25px;
+}
+    
+
+/*
+===================================================
+================== Table styles ===================
+===================================================
+
+Almost all table themes here are either 
+frankenstein monsters of their originals
+or related to it. These were found
+on the www inside codepens, stackoverflow 
+threads and forums. Any credit belongs to 
+the creators and this is a free/open tribute
+for these contributions. 
+
+Usage:
+Select any table style to use in your cssclass.
+
+Eg. cssclass: label
+
+Remember that you can stack hacks!
+
+Eg. cssclass: label, wideTable 
+
+(I wouldn't choose wideTable in this case, 
+because a foodlabel is never wide)
+
+*/
+
+
+/* -------------------------------------------- */
+/* Nutrition Facts table                        */
+/* -------------------------------------------- */
+
+.label table {
+	border-collapse: collapse;
+	border: 2px solid #BCBCBC;
+}
+
+.label table th {
+	font-size: 25px;
+	font-weight: 700;
+}
+.label table thead th {
+	/*padding: 10px 10px;*/
+	background: #ffffff !important;
+	color: #333333;
+}
+.label td,
+.label th {
+	border-bottom: 1px solid #9E9E9E;
+	border-top: 0px solid #9E9E9E;
+	border-left: none;
+	border-right: none;
+	padding: 2px 0px 0 0px;
+}
+
+.label tr {
+	border-bottom: none;
+	margin: 0 10px 0 10px;
+}
+
+.label table td {  
+	background: #ffffff;
+	font-family: Avenir, "Avenir Next"; Montserrat; sans-serif;
+	font-size: 13px;
+	color: #343434;
+	word-wrap: break-word;
+}
+
+/*
+
+=============================================================================
+============================== EYECANDY CSS =================================
+=============================================================================
+
+To make the label table look like a real foodlabel
+
+if you add or delete rows, make sure to adapt below css 
+to reflect the right rows!
+
+tr:nth-last-child(22) means: the 22nd row from the bottom up.
+
+So count, if you add or delete rows!
+
+td: nth-child(2) means the 2nd cell in that row.
+
+The 1st and 4th cells on any row are empty, only cells 2 and 3 have text.
+The first and 4th column are only there to allow for spacing 
+between the table border and the table contents as 
+Obsidian/markdown tables do not allow tables to have
+padding right now 
+
+*/
+
+/* ------------------------------------------------------------------------ */
+/* some padding for the first column (has no contents, is there for spacing)*/
+/* ------------------------------------------------------------------------ */
+
+.label td:nth-child(1) {  
+  border: none;
+  padding: 2px 5px 0 5px;
+}
+
+/* ------------------------------------------------------------------------ */
+/* some padding for the last column (has no contents, is there for spacing) */
+/* ------------------------------------------------------------------------ */
+
+.label td:nth-child(4) {  
+  border: none;
+  padding: 2px 5px 0 5px;
+}
+
+/* ------------------------------------------------------------------------ */
+/* bottom-border for the last (Vitamin C) row */
+/* ------------------------------------------------------------------------ */
+
+.label tbody tr:nth-last-child(2) td:nth-child(2) {
+	border-bottom: 4px solid #9E9E9E;
+}
+.label tbody tr:nth-last-child(2) td:nth-child(3) {
+	border-bottom: 4px solid #9E9E9E;
+}
+
+/* ------------------------------------------------------------------------ */
+/* thick bottom-border for the Serving Size row                             */
+/* ------------------------------------------------------------------------ */
+
+.label tbody tr:nth-last-child(22) td:nth-child(2) {
+	border-bottom: 10px solid #9E9E9E;
+	font-size: 16px;
+}
+.label tbody tr:nth-last-child(22) td:nth-child(3) {
+	border-bottom: 10px solid #9E9E9E;
+	font-size: 16px;
+	padding-bottom: 3px;
+}
+
+/* ------------------------------------------------------------------------ */
+/* top padding to allow for the thicker Serving Size bottom-border          */
+/* and no bottom border and bold font for the Amount Per Serving row        */
+/* ------------------------------------------------------------------------ */
+
+.label tbody tr:nth-last-child(21) td:nth-child(2) {
+	padding-top: 3px;
+	border-bottom: none;
+	font-weight: bold;
+}
+
+.label tbody tr:nth-last-child(21) td:nth-child(3) {
+	padding-top: 3px;
+	border-bottom: none;
+}
+
+/* ------------------------------------------------------------------------ */
+/* larger font and thicker border-bottom for the Calories row               */
+/* ------------------------------------------------------------------------ */
+
+.label tbody tr:nth-last-child(20) td:nth-child(2) {
+	font-size: 22px;
+	border-bottom: 4px solid #9E9E9E;
+	padding-bottom: 5px;
+}
+
+.label tbody tr:nth-last-child(20) td:nth-child(3) {
+	font-size: 22px;
+	border-bottom: 4px solid #9E9E9E;
+}
+
+/* ------------------------------------------------------------------------ */
+/* thick bottom-border for the Protein row                                  */
+/* ------------------------------------------------------------------------ */
+
+.label tbody tr:nth-last-child(8) td:nth-child(2) {
+	border-bottom: 10px solid #9E9E9E;
+	font-size: 13px;
+}
+.label tbody tr:nth-last-child(8) td:nth-child(3) {
+	border-bottom: 10px solid #9E9E9E;
+	font-size: 13px;
+	padding-bottom: 3px;
+}
+
+/* ------------------------------------------------------------------------ */
+/* Some top padding for the Vitamin D row to allow for                      */
+/* the Protein thick bottom-border											*/
+/* ------------------------------------------------------------------------ */
+.label tbody tr:nth-last-child(7) td:nth-child(2) {
+	padding-top: 3px;
+}
+
+.label tbody tr:nth-last-child(7) td:nth-child(3) {
+	padding-top: 3px;
+}
+
+/* ------------------------------------------------------------------------ */
+/* Change background-color and font-color on hovering over the table header */
+/* ------------------------------------------------------------------------ */
+
+.label thead th:hover {
+    background-color: #000000 !important;
+    color: white;
+}
+
+/* ------------------------------------------------------------------------ */
+/* Change background-color and font-color on hovering over the rows         */
+/* ------------------------------------------------------------------------ */
+
+.label tbody tr:hover td,
+.label tbody tr:hover td strong,
+.label tbody tr:hover td a {
+	background-color: #000000 !important;
+	color: white;
+}
+
+
+
+

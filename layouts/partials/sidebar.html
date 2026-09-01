@@ -1,0 +1,115 @@
+<aside class="sidebar-nav" id="sidebar-nav" aria-label="Specialty Navigation">
+  <div class="sidebar-header">
+    <span class="sidebar-title">Topics</span>
+    <span class="sidebar-badge">{{ len site.RegularPages }} Notes</span>
+  </div>
+
+  {{ $defaultIconMap := dict
+    "getting-started" "rocket"
+    "getting started" "rocket"
+    "documentation" "book-open"
+    "guides" "compass"
+    "notes" "file-text"
+    "cardiology" "heart-pulse"
+    "pulmonology" "wind"
+    "nephrology" "droplets"
+    "neurology" "brain"
+    "emergencies" "siren"
+    "infectious diseases" "bug"
+    "misc" "shapes"
+    "social pediatrics" "hand-heart"
+  }}
+  {{ $iconMap := merge $defaultIconMap (or site.Params.sidebarIcons (dict)) }}
+
+  {{ $defaultTitleMap := dict
+    "getting-started" "Getting Started"
+    "getting started" "Getting Started"
+  }}
+  {{ $titleMap := merge $defaultTitleMap (or site.Params.sidebarTitles (dict)) }}
+
+  <div class="sidebar-sections" id="sidebar-sections">
+    {{ range site.Sections }}
+      {{ $section := . }}
+      {{ $isCurrentSection := eq $.Section $section.Section }}
+      {{ $secIndexNote := "" }}
+      {{ range $section.RegularPages }}
+        {{ if or .Params.isindex .Params.is_index (index .Params "folder.index") (and .Params.folder (index .Params.folder "index")) }}
+          {{ $secIndexNote = . }}
+        {{ end }}
+      {{ end }}
+      {{ $secKey := lower $section.Section }}
+      {{ $secKeyClean := replace $secKey "-" " " }}
+      {{ $secIcon := index $iconMap $secKeyClean | default (index $iconMap $secKey | default "folder") }}
+      {{ $secTitle := index $titleMap $secKeyClean | default (index $titleMap $secKey | default (or (and $secIndexNote $secIndexNote.Title) $section.Title)) }}
+
+      <div class="sidebar-section-item {{ if $isCurrentSection }}is-active-section{{ end }}" data-section="{{ $section.Section }}">
+        <div class="sidebar-section-header" onclick="toggleSection(this)">
+          <span class="section-caret"><i data-lucide="chevron-right"></i></span>
+          <span class="section-icon-wrap"><i data-lucide="{{ $secIcon }}" class="section-lucide-icon"></i></span>
+          <span class="section-name">
+            {{ if $secIndexNote }}
+              <a href="{{ $secIndexNote.RelPermalink }}" onclick="event.stopPropagation();" class="section-link {{ if eq $.RelPermalink $secIndexNote.RelPermalink }}active{{ end }}">
+                {{ $secTitle }}
+              </a>
+            {{ else }}
+              <a href="{{ $section.RelPermalink }}" onclick="event.stopPropagation();" class="section-link">
+                {{ $secTitle }}
+              </a>
+            {{ end }}
+          </span>
+          <span class="section-count">{{ len $section.RegularPages }}</span>
+        </div>
+
+        <ul class="sidebar-notes-list" style="{{ if $isCurrentSection }}display: block;{{ else }}display: none;{{ end }}">
+          {{ range (sort $section.RegularPages "Weight") }}
+            {{ $isPageActive := eq $.RelPermalink .RelPermalink }}
+            <li class="sidebar-note-item">
+              <a href="{{ .RelPermalink }}" class="sidebar-note-link {{ if $isPageActive }}active{{ end }}">
+                {{ if .Params.icon }}
+                  <i data-lucide="{{ .Params.icon }}" class="sidebar-note-icon"></i>
+                {{ else }}
+                  <i data-lucide="file-text" class="sidebar-note-icon"></i>
+                {{ end }}
+                <span class="sidebar-note-title">{{ or .Title .File.BaseFileName }}</span>
+              </a>
+            </li>
+          {{ end }}
+        </ul>
+      </div>
+    {{ end }}
+  </div>
+</aside>
+
+<script>
+function toggleSection(headerEl) {
+  const item = headerEl.closest('.sidebar-section-item');
+  const list = item.querySelector('.sidebar-notes-list');
+  const isOpen = list.style.display === 'block';
+  list.style.display = isOpen ? 'none' : 'block';
+  item.classList.toggle('is-open', !isOpen);
+
+  // Save opened state to localStorage
+  try {
+    const secName = item.getAttribute('data-section');
+    const saved = JSON.parse(localStorage.getItem('pedia_open_sections') || '{}');
+    saved[secName] = !isOpen;
+    localStorage.setItem('pedia_open_sections', JSON.stringify(saved));
+  } catch(e) {}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem('pedia_open_sections') || '{}');
+    document.querySelectorAll('.sidebar-section-item').forEach(item => {
+      const secName = item.getAttribute('data-section');
+      if (saved[secName] === true && !item.classList.contains('is-active-section')) {
+        const list = item.querySelector('.sidebar-notes-list');
+        if (list) {
+          list.style.display = 'block';
+          item.classList.add('is-open');
+        }
+      }
+    });
+  } catch(e) {}
+});
+</script>

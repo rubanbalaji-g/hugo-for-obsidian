@@ -1,0 +1,16 @@
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-links">
+      <a href="{{ "/" | relURL }}">Home</a>
+      {{ with site.Params.email }}
+      <span class="sep">•</span>
+      <a href="mailto:{{ . }}">Contact</a>
+      {{ end }}
+      <span class="sep">•</span>
+      <span class="copyright">© {{ with site.Params.author }}{{ . }}{{ else }}{{ site.Title }}{{ end }} | {{ now.Year }}</span>
+    </div>
+    {{ with site.Params.description }}
+    <p class="disclaimer">{{ . }}</p>
+    {{ end }}
+  </div>
+</footer>

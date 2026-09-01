@@ -1,0 +1,43 @@
+baseURL = "https://example.com/"
+locale = "en"
+title = "My Digital Garden"
+paginate = 50
+pluralizeListTitles = false
+
+[params]
+  description = "A fast, modern knowledge base synced directly from Obsidian."
+  author = "Your Name"
+  siteName = "Digital Garden"
+  accentColor = "#00a868"
+  baseTheme = "dark"
+
+[[params.navLinks]]
+  name = "Home"
+  url = "/"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+    [markup.goldmark.extensions]
+      definitionList = true
+      footnote = true
+      linkify = true
+      strikethrough = true
+      table = true
+      taskList = true
+      typographer = false
+      [markup.goldmark.extensions.passthrough]
+        enable = true
+        [markup.goldmark.extensions.passthrough.delimiters]
+          block = [['\[', '\]'], ['$$', '$$']]
+          inline = [['\(', '\)'], ['$', '$']]
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+    ordered = false
+
+[outputs]
+  home = ["HTML", "JSON"]
+  page = ["HTML"]
+  section = ["HTML"]

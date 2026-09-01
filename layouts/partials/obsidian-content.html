@@ -1,0 +1,29 @@
+{{ $content := .Content }}
+
+{{/* 1. Transform Obsidian Callouts (Matches any blockquote with [!type]) */}}
+{{ $content = replaceRE `<blockquote>\s*<p>\s*\[!([a-zA-Z0-9_-]+)\][ \t]*([^\n<]*)(?:<br\s*\/?>)?([\s\S]*?)<\/blockquote>` `<div class="callout" data-callout="$1"><div class="callout-title"><span class="callout-title-text">$2</span></div><div class="callout-content"><p>$3</div></div>` $content }}
+
+{{/* 2. Transform Mermaid code blocks to pre.mermaid */}}
+{{ $content = replaceRE `<pre[^>]*><code class="language-mermaid"[^>]*>([\s\S]*?)<\/code><\/pre>` `<pre class="mermaid">$1</pre>` $content }}
+
+{{/* 3. Transform Obsidian Wikilinks: [[Target]] or [[Target|Label]] or [[Target#Header|Label]] */}}
+{{ $wikilinks := findRESubmatch `\[\[([^\|\]#]+)(?:#[^\|\]]+)?(?:\|([^\]]+))?\]\]` $content }}
+{{ range $wikilinks }}
+  {{ $fullMatch := index . 0 }}
+  {{ $target := index . 1 }}
+  {{ $label := index . 2 }}
+  {{ if not $label }}
+    {{ $label = path.Base $target }}
+  {{ end }}
+  {{ $cleanTarget := replace $target "\\" "/" }}
+  {{ $cleanTarget = strings.TrimPrefix "notes/" $cleanTarget }}
+  {{ $cleanTarget = strings.TrimPrefix "/" $cleanTarget }}
+  {{ $href := printf "/%s/" (urlize $cleanTarget) }}
+  {{ $linkTag := printf `<a href="%s" class="internal-link">%s</a>` $href $label }}
+  {{ $content = replace $content $fullMatch $linkTag }}
+{{ end }}
+
+{{/* 4. Transform Lucide icon shortcodes: :lucide-name: or :li-name: */}}
+{{ $content = replaceRE `:(?:lucide|li)-([a-z0-9-]+):` `<i data-lucide="$1" class="inline-lucide-icon"></i>` $content }}
+
+{{ $content | safeHTML }}

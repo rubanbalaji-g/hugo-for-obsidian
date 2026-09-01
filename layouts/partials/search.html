@@ -1,0 +1,16 @@
+<div id="search-modal" class="search-modal" style="display: none;">
+  <div class="search-backdrop" onclick="closeSearch()"></div>
+  <div class="search-dialog">
+    <div class="search-input-wrapper">
+      <i data-lucide="search" class="search-icon"></i>
+      <input type="text" id="search-input" placeholder="Search clinical notes, trials, guidelines..." autocomplete="off" />
+      <span class="search-esc-hint" onclick="closeSearch()">ESC</span>
+    </div>
+    <div class="search-results-wrapper">
+      <div id="search-results" class="search-results-list"></div>
+      <div id="search-preview" class="search-preview-panel">
+        <div class="search-preview-placeholder">Select a note to preview</div>
+      </div>
+    </div>
+  </div>
+</div>

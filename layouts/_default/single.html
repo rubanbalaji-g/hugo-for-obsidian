@@ -1,0 +1,98 @@
+{{ define "main" }}
+{{ $pageTitle := or .Title .File.BaseFileName }}
+<div class="note-container">
+  {{ partial "breadcrumbs.html" . }}
+
+  <article class="clinical-note">
+    <div class="note-body-wrapper">
+      <div class="note-content cm-s-obsidian">
+        {{ partial "obsidian-content.html" . }}
+        {{ partial "footer.html" . }}
+      </div>
+
+      {{ partial "toc.html" . }}
+    </div>
+  </article>
+</div>
+
+<!-- On-Demand Mermaid Loader -->
+<script>
+  if (document.querySelector('.mermaid')) {
+    document.querySelectorAll('.mermaid').forEach(function(el) {
+      el.textContent = el.textContent
+        .replace(/&#34;/g, '"')
+        .replace(/&quot;/g, '"')
+        .replace(/&gt;/g, '>')
+        .replace(/&lt;/g, '<')
+        .replace(/&amp;/g, '&');
+    });
+
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+    s.onload = function() {
+      if (typeof mermaid !== 'undefined') {
+        const isDark = document.body.classList.contains('theme-dark');
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: isDark ? 'dark' : 'default',
+          securityLevel: 'loose'
+        });
+        mermaid.run({ querySelector: '.mermaid' });
+      }
+    };
+    document.head.appendChild(s);
+  }
+
+  // Print function matching PediaNotes standards
+  function doPrint() {
+    var content = document.querySelector('.note-content');
+    if (!content) { window.print(); return; }
+
+    var printWindow = window.open('', '_blank', 'width=900,height=700');
+    var isDark = document.body.classList.contains('theme-dark');
+    var pediaColor = isDark ? '#AAE5FA' : '#1E3A8A';
+    var notesColor = isDark ? '#FBC8C1' : '#9D174D';
+
+    var now = new Date();
+    var dateStr = now.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', year: 'numeric' });
+    var timeStr = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: false });
+    var pageUrl = window.location.href;
+
+    printWindow.document.write(
+      '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>' + document.title + '</title>' +
+      '<style>' +
+      '* { box-sizing: border-box; margin: 0; padding: 0; }' +
+      '@page { margin: 15mm 20mm 20mm; @bottom-center { content: "Page " counter(page) " of " counter(pages); font-family: Arial, sans-serif; font-size: 8.5pt; color: #666; } }' +
+      'body { font-family: Georgia, serif; font-size: 12pt; line-height: 1.6; color: #000; background: #fff; padding: 32mm 20mm 18mm; }' +
+      'h1, h2, h3, h4 { font-family: Arial, sans-serif; color: #000; margin: 1em 0 0.5em; page-break-after: avoid; }' +
+      'table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 10pt; }' +
+      'th, td { border: 1px solid #999; padding: 6px 8px; text-align: left; }' +
+      'th { background: #eee; font-weight: bold; }' +
+      '.callout { border: 1px solid #ccc; border-left: 4px solid #666; padding: 8px 12px; margin: 1em 0; background: #fafafa; border-radius: 4px; }' +
+      '.mermaid { display: block !important; width: 100% !important; max-width: 100% !important; max-height: 220mm !important; height: auto !important; margin: 1.5em 0 !important; page-break-inside: avoid !important; break-inside: avoid !important; }' +
+      '.mermaid svg { display: block !important; max-width: 100% !important; max-height: 215mm !important; height: auto !important; width: auto !important; margin: 0 auto !important; }' +
+      '.print-page-header { position: fixed; top: 0; left: 0; right: 0; height: 28mm; display: flex; align-items: center; justify-content: space-between; background: #fff; padding: 4px 20mm; border-bottom: 1px solid #ddd; }' +
+      '.print-header-left .site-name { font-family: Arial, sans-serif; font-size: 18pt; font-weight: bold; }' +
+      '.print-header-right { font-family: Arial, sans-serif; font-size: 8pt; color: #333; text-align: right; }' +
+      '@media print { body { padding: 0; margin: 0; } }' +
+      '.header-space { height: 28mm; }' +
+      '.content-table { width: 100%; border: none; border-collapse: collapse; }' +
+      '.content-table td { border: none !important; padding: 0 !important; background: transparent; }' +
+      '</style></head><body>' +
+      '<div class="print-page-header">' +
+        '<div class="print-header-left"><span class="site-name"><span style="color:' + pediaColor + ';">Pedia</span><span style="color:' + notesColor + ';">Notes</span></span></div>' +
+        '<div class="print-header-right"><div>' + pageUrl + '</div><div>' + dateStr + ' ' + timeStr + ' IST</div><div style="font-weight:bold;">Dr. Rubanbalaji</div></div>' +
+      '</div>' +
+      '<table class="content-table"><thead><tr><td><div class="header-space">&nbsp;</div></td></tr></thead><tbody><tr><td>' +
+      content.innerHTML +
+      '</td></tr></tbody></table></body></html>'
+    );
+    printWindow.document.close();
+    printWindow.onload = function() {
+      printWindow.focus();
+      printWindow.print();
+      printWindow.onafterprint = function() { printWindow.close(); };
+    };
+  }
+</script>
+{{ end }}

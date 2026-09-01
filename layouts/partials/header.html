@@ -1,0 +1,113 @@
+<header class="site-header">
+  <div class="header-container">
+    <div class="header-left">
+      <button class="icon-btn sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Sidebar" title="Toggle Sidebar">
+        <i data-lucide="panel-left"></i>
+      </button>
+
+      <a href="{{ "/" | relURL }}" class="brand-link">
+        {{ if site.Params.logo }}
+        <img src="{{ site.Params.logo | relURL }}" alt="{{ site.Title }} Logo" class="brand-logo" width="28" height="28">
+        {{ else }}
+        <i data-lucide="book-open" class="brand-icon" style="width: 24px; height: 24px; color: var(--accent);"></i>
+        {{ end }}
+        <span class="brand-title">{{ site.Title }}</span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="site-nav desktop-nav" aria-label="Main Navigation">
+        {{ range site.Params.navLinks }}
+          <a href="{{ .url }}" class="nav-link" {{ if strings.HasPrefix .url "http" }}target="_blank" rel="noopener"{{ end }}>
+            {{ .name }}
+          </a>
+        {{ end }}
+      </nav>
+    </div>
+
+    <div class="header-actions">
+      <button class="search-trigger-btn" onclick="openSearch()" aria-label="Search">
+        <i data-lucide="search"></i>
+        <span class="search-hint">Search notes...</span>
+        <kbd class="search-kbd">⌘K</kbd>
+      </button>
+
+      <button class="icon-btn theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+        <i data-lucide="sun" class="sun-icon"></i>
+        <i data-lucide="moon" class="moon-icon"></i>
+      </button>
+
+      {{ if .IsPage }}
+      <button class="icon-btn print-btn" onclick="doPrint()" aria-label="Print Note">
+        <i data-lucide="printer"></i>
+      </button>
+      {{ end }}
+
+      <!-- Mobile Hamburger Button -->
+      <button class="icon-btn mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Open Navigation Menu">
+        <i data-lucide="menu" class="menu-icon"></i>
+        <i data-lucide="x" class="close-icon" style="display: none;"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer Overlay (Strictly hidden by default) -->
+  <div class="mobile-menu-drawer" id="mobile-menu-drawer" style="display: none;">
+    <div class="mobile-menu-content">
+      <div class="mobile-menu-section">
+        <span class="mobile-menu-heading">External Links</span>
+        {{ range site.Params.navLinks }}
+          <a href="{{ .url }}" class="mobile-nav-link" {{ if strings.HasPrefix .url "http" }}target="_blank" rel="noopener"{{ end }}>
+            <i data-lucide="external-link"></i>
+            <span>{{ .name }}</span>
+          </a>
+        {{ end }}
+      </div>
+
+      <div class="mobile-menu-section">
+        <span class="mobile-menu-heading">Navigation</span>
+        <button class="mobile-drawer-btn" onclick="toggleSidebar(); toggleMobileMenu();">
+          <i data-lucide="book-open"></i>
+          <span>Topics</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+function toggleSidebar() {
+  const layout = document.getElementById('site-layout');
+  const sidebar = document.getElementById('sidebar-nav');
+  if (layout) {
+    layout.classList.toggle('sidebar-collapsed');
+    const isCollapsed = layout.classList.contains('sidebar-collapsed');
+    try { localStorage.setItem('pedia_sidebar_collapsed', isCollapsed ? 'true' : 'false'); } catch(e) {}
+  }
+  if (sidebar && window.innerWidth <= 1024) {
+    sidebar.classList.toggle('mobile-open');
+  }
+}
+
+function toggleMobileMenu() {
+  const drawer = document.getElementById('mobile-menu-drawer');
+  const btn = document.querySelector('.mobile-menu-btn');
+  if (drawer && btn) {
+    const isCurrentlyOpen = drawer.style.display === 'block';
+    drawer.style.display = isCurrentlyOpen ? 'none' : 'block';
+    const menuIcon = btn.querySelector('.menu-icon');
+    const closeIcon = btn.querySelector('.close-icon');
+    if (menuIcon && closeIcon) {
+      menuIcon.style.display = isCurrentlyOpen ? 'block' : 'none';
+      closeIcon.style.display = isCurrentlyOpen ? 'none' : 'block';
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    if (localStorage.getItem('pedia_sidebar_collapsed') === 'true' && window.innerWidth > 1024) {
+      document.getElementById('site-layout')?.classList.add('sidebar-collapsed');
+    }
+  } catch(e) {}
+});
+</script>

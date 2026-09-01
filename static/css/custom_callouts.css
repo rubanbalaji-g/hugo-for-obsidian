@@ -1,0 +1,361 @@
+/* ============================================================
+   OBSIDIAN CUSTOM CALLOUTS (Comprehensive Clinical Color Palette)
+   Directly styles backgrounds, borders, title colors, & icons.
+   Supports Live Preview, Reading View, and all themes.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. CORE PRIMARY & SECONDARY COLORS
+   ------------------------------------------------------------ */
+
+/* ORANGE */
+.callout[data-callout="orange"],
+.callout[data-callout-metadata="orange"] {
+    --callout-color: 249, 115, 22 !important;
+    background-color: rgba(249, 115, 22, 0.12) !important;
+    border-left: 4px solid rgb(249, 115, 22) !important;
+}
+.callout[data-callout="orange"] > .callout-title,
+.callout[data-callout-metadata="orange"] > .callout-title {
+    color: rgb(249, 115, 22) !important;
+}
+
+/* BLUE */
+.callout[data-callout="blue"],
+.callout[data-callout-metadata="blue"] {
+    --callout-color: 59, 130, 246 !important;
+    background-color: rgba(59, 130, 246, 0.12) !important;
+    border-left: 4px solid rgb(59, 130, 246) !important;
+}
+.callout[data-callout="blue"] > .callout-title,
+.callout[data-callout-metadata="blue"] > .callout-title {
+    color: rgb(59, 130, 246) !important;
+}
+
+/* RED */
+.callout[data-callout="red"],
+.callout[data-callout-metadata="red"] {
+    --callout-color: 239, 68, 68 !important;
+    background-color: rgba(239, 68, 68, 0.12) !important;
+    border-left: 4px solid rgb(239, 68, 68) !important;
+}
+.callout[data-callout="red"] > .callout-title,
+.callout[data-callout-metadata="red"] > .callout-title {
+    color: rgb(239, 68, 68) !important;
+}
+
+/* GREEN */
+.callout[data-callout="green"],
+.callout[data-callout-metadata="green"] {
+    --callout-color: 34, 197, 94 !important;
+    background-color: rgba(34, 197, 94, 0.12) !important;
+    border-left: 4px solid rgb(34, 197, 94) !important;
+}
+.callout[data-callout="green"] > .callout-title,
+.callout[data-callout-metadata="green"] > .callout-title {
+    color: rgb(34, 197, 94) !important;
+}
+
+/* YELLOW */
+.callout[data-callout="yellow"],
+.callout[data-callout-metadata="yellow"] {
+    --callout-color: 234, 179, 8 !important;
+    background-color: rgba(234, 179, 8, 0.12) !important;
+    border-left: 4px solid rgb(234, 179, 8) !important;
+}
+.callout[data-callout="yellow"] > .callout-title,
+.callout[data-callout-metadata="yellow"] > .callout-title {
+    color: rgb(234, 179, 8) !important;
+}
+
+/* PURPLE */
+.callout[data-callout="purple"],
+.callout[data-callout-metadata="purple"] {
+    --callout-color: 168, 85, 247 !important;
+    background-color: rgba(168, 85, 247, 0.12) !important;
+    border-left: 4px solid rgb(168, 85, 247) !important;
+}
+.callout[data-callout="purple"] > .callout-title,
+.callout[data-callout-metadata="purple"] > .callout-title {
+    color: rgb(168, 85, 247) !important;
+}
+
+/* ------------------------------------------------------------
+   2. EXTENDED EXPANDED PALETTE (Cyan, Teal, Emerald, Amber, Rose, Pink, Indigo, Violet, Slate)
+   ------------------------------------------------------------ */
+
+/* CYAN / SKY */
+.callout[data-callout="cyan"],
+.callout[data-callout-metadata="cyan"],
+.callout[data-callout="sky"],
+.callout[data-callout-metadata="sky"] {
+    --callout-color: 14, 165, 233 !important;
+    background-color: rgba(14, 165, 233, 0.12) !important;
+    border-left: 4px solid rgb(14, 165, 233) !important;
+}
+.callout[data-callout="cyan"] > .callout-title,
+.callout[data-callout-metadata="cyan"] > .callout-title,
+.callout[data-callout="sky"] > .callout-title,
+.callout[data-callout-metadata="sky"] > .callout-title {
+    color: rgb(14, 165, 233) !important;
+}
+
+/* TEAL / MINT */
+.callout[data-callout="teal"],
+.callout[data-callout-metadata="teal"],
+.callout[data-callout="mint"],
+.callout[data-callout-metadata="mint"] {
+    --callout-color: 20, 184, 166 !important;
+    background-color: rgba(20, 184, 166, 0.12) !important;
+    border-left: 4px solid rgb(20, 184, 166) !important;
+}
+.callout[data-callout="teal"] > .callout-title,
+.callout[data-callout-metadata="teal"] > .callout-title,
+.callout[data-callout="mint"] > .callout-title,
+.callout[data-callout-metadata="mint"] > .callout-title {
+    color: rgb(20, 184, 166) !important;
+}
+
+/* EMERALD */
+.callout[data-callout="emerald"],
+.callout[data-callout-metadata="emerald"] {
+    --callout-color: 16, 185, 129 !important;
+    background-color: rgba(16, 185, 129, 0.12) !important;
+    border-left: 4px solid rgb(16, 185, 129) !important;
+}
+.callout[data-callout="emerald"] > .callout-title,
+.callout[data-callout-metadata="emerald"] > .callout-title {
+    color: rgb(16, 185, 129) !important;
+}
+
+/* AMBER */
+.callout[data-callout="amber"],
+.callout[data-callout-metadata="amber"] {
+    --callout-color: 245, 158, 11 !important;
+    background-color: rgba(245, 158, 11, 0.12) !important;
+    border-left: 4px solid rgb(245, 158, 11) !important;
+}
+.callout[data-callout="amber"] > .callout-title,
+.callout[data-callout-metadata="amber"] > .callout-title {
+    color: rgb(245, 158, 11) !important;
+}
+
+/* ROSE / CORAL */
+.callout[data-callout="rose"],
+.callout[data-callout-metadata="rose"],
+.callout[data-callout="coral"],
+.callout[data-callout-metadata="coral"] {
+    --callout-color: 244, 63, 94 !important;
+    background-color: rgba(244, 63, 94, 0.12) !important;
+    border-left: 4px solid rgb(244, 63, 94) !important;
+}
+.callout[data-callout="rose"] > .callout-title,
+.callout[data-callout-metadata="rose"] > .callout-title,
+.callout[data-callout="coral"] > .callout-title,
+.callout[data-callout-metadata="coral"] > .callout-title {
+    color: rgb(244, 63, 94) !important;
+}
+
+/* PINK */
+.callout[data-callout="pink"],
+.callout[data-callout-metadata="pink"] {
+    --callout-color: 236, 72, 153 !important;
+    background-color: rgba(236, 72, 153, 0.12) !important;
+    border-left: 4px solid rgb(236, 72, 153) !important;
+}
+.callout[data-callout="pink"] > .callout-title,
+.callout[data-callout-metadata="pink"] > .callout-title {
+    color: rgb(236, 72, 153) !important;
+}
+
+/* INDIGO */
+.callout[data-callout="indigo"],
+.callout[data-callout-metadata="indigo"] {
+    --callout-color: 99, 102, 241 !important;
+    background-color: rgba(99, 102, 241, 0.12) !important;
+    border-left: 4px solid rgb(99, 102, 241) !important;
+}
+.callout[data-callout="indigo"] > .callout-title,
+.callout[data-callout-metadata="indigo"] > .callout-title {
+    color: rgb(99, 102, 241) !important;
+}
+
+/* VIOLET / LAVENDER */
+.callout[data-callout="violet"],
+.callout[data-callout-metadata="violet"],
+.callout[data-callout="lavender"],
+.callout[data-callout-metadata="lavender"] {
+    --callout-color: 139, 92, 246 !important;
+    background-color: rgba(139, 92, 246, 0.12) !important;
+    border-left: 4px solid rgb(139, 92, 246) !important;
+}
+.callout[data-callout="violet"] > .callout-title,
+.callout[data-callout-metadata="violet"] > .callout-title,
+.callout[data-callout="lavender"] > .callout-title,
+.callout[data-callout-metadata="lavender"] > .callout-title {
+    color: rgb(139, 92, 246) !important;
+}
+
+/* SLATE / GRAY */
+.callout[data-callout="slate"],
+.callout[data-callout-metadata="slate"],
+.callout[data-callout="gray"],
+.callout[data-callout-metadata="gray"] {
+    --callout-color: 100, 116, 139 !important;
+    background-color: rgba(100, 116, 139, 0.12) !important;
+    border-left: 4px solid rgb(100, 116, 139) !important;
+}
+.callout[data-callout="slate"] > .callout-title,
+.callout[data-callout-metadata="slate"] > .callout-title,
+.callout[data-callout="gray"] > .callout-title,
+.callout[data-callout-metadata="gray"] > .callout-title {
+    color: rgb(100, 116, 139) !important;
+}
+
+
+/* ------------------------------------------------------------
+   3. SPECIAL CUSTOM ICON CALLOUTS: crit, def, atomic
+   ------------------------------------------------------------ */
+
+/* CRIT (Yellow) */
+.callout[data-callout="crit"] {
+    --callout-color: 247, 249, 118 !important;
+    background-color: rgba(247, 249, 118, 0.12) !important;
+    border-left: 4px solid rgb(247, 249, 118) !important;
+}
+.callout[data-callout="crit"] > .callout-title {
+    color: rgb(247, 249, 118) !important;
+}
+
+/* DEF (Blue) */
+.callout[data-callout="def"] {
+    --callout-color: 120, 145, 247 !important;
+    background-color: rgba(120, 145, 247, 0.12) !important;
+    border-left: 4px solid rgb(120, 145, 247) !important;
+}
+.callout[data-callout="def"] > .callout-title {
+    color: rgb(120, 145, 247) !important;
+}
+
+/* ATOMIC (Violet / Lavender) */
+.theme-light .callout[data-callout="atomic"] {
+    --callout-color: 124, 58, 237 !important;
+    background-color: rgba(124, 58, 237, 0.10) !important;
+    border-left: 4px solid rgb(124, 58, 237) !important;
+}
+.theme-light .callout[data-callout="atomic"] > .callout-title {
+    color: rgb(124, 58, 237) !important;
+}
+
+.theme-dark .callout[data-callout="atomic"] {
+    --callout-color: 167, 139, 250 !important;
+    background-color: rgba(167, 139, 250, 0.12) !important;
+    border-left: 4px solid rgb(167, 139, 250) !important;
+}
+.theme-dark .callout[data-callout="atomic"] > .callout-title {
+    color: rgb(167, 139, 250) !important;
+}
+
+
+/* ------------------------------------------------------------
+   4. HIDE ICONS FOR COLOR-ONLY CALLOUTS
+   ------------------------------------------------------------ */
+.callout[data-callout="orange"] .callout-icon,
+.callout[data-callout="blue"] .callout-icon,
+.callout[data-callout="red"] .callout-icon,
+.callout[data-callout="green"] .callout-icon,
+.callout[data-callout="yellow"] .callout-icon,
+.callout[data-callout="purple"] .callout-icon,
+.callout[data-callout="cyan"] .callout-icon,
+.callout[data-callout="sky"] .callout-icon,
+.callout[data-callout="teal"] .callout-icon,
+.callout[data-callout="mint"] .callout-icon,
+.callout[data-callout="emerald"] .callout-icon,
+.callout[data-callout="amber"] .callout-icon,
+.callout[data-callout="rose"] .callout-icon,
+.callout[data-callout="coral"] .callout-icon,
+.callout[data-callout="pink"] .callout-icon,
+.callout[data-callout="indigo"] .callout-icon,
+.callout[data-callout="violet"] .callout-icon,
+.callout[data-callout="lavender"] .callout-icon,
+.callout[data-callout="slate"] .callout-icon,
+.callout[data-callout="gray"] .callout-icon,
+.callout[data-callout-metadata="orange"] .callout-icon,
+.callout[data-callout-metadata="blue"] .callout-icon,
+.callout[data-callout-metadata="red"] .callout-icon,
+.callout[data-callout-metadata="green"] .callout-icon,
+.callout[data-callout-metadata="yellow"] .callout-icon,
+.callout[data-callout-metadata="purple"] .callout-icon,
+.callout[data-callout-metadata="cyan"] .callout-icon,
+.callout[data-callout-metadata="sky"] .callout-icon,
+.callout[data-callout-metadata="teal"] .callout-icon,
+.callout[data-callout-metadata="mint"] .callout-icon,
+.callout[data-callout-metadata="emerald"] .callout-icon,
+.callout[data-callout-metadata="amber"] .callout-icon,
+.callout[data-callout-metadata="rose"] .callout-icon,
+.callout[data-callout-metadata="coral"] .callout-icon,
+.callout[data-callout-metadata="pink"] .callout-icon,
+.callout[data-callout-metadata="indigo"] .callout-icon,
+.callout[data-callout-metadata="violet"] .callout-icon,
+.callout[data-callout-metadata="lavender"] .callout-icon,
+.callout[data-callout-metadata="slate"] .callout-icon,
+.callout[data-callout-metadata="gray"] .callout-icon {
+    display: none !important;
+}
+
+
+/* ------------------------------------------------------------
+   5. CUSTOM ICONS (crit, def, atomic)
+   ------------------------------------------------------------ */
+.callout[data-callout="crit"] .callout-icon svg,
+.callout[data-callout="def"] .callout-icon svg,
+.callout[data-callout="atomic"] .callout-icon svg {
+    display: none !important;
+}
+
+.callout[data-callout="crit"] .callout-icon,
+.callout[data-callout="def"] .callout-icon,
+.callout[data-callout="atomic"] .callout-icon {
+    width: 20px !important;
+    height: 20px !important;
+    display: inline-block !important;
+    background-color: rgb(var(--callout-color)) !important;
+    -webkit-mask-size: contain !important;
+    mask-size: contain !important;
+    -webkit-mask-repeat: no-repeat !important;
+    mask-repeat: no-repeat !important;
+    -webkit-mask-position: center !important;
+    mask-position: center !important;
+}
+
+.callout[data-callout="crit"] .callout-icon {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='9' r='7'/%3E%3Ccircle cx='15' cy='15' r='7'/%3E%3C/svg%3E") !important;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='9' r='7'/%3E%3Ccircle cx='15' cy='15' r='7'/%3E%3C/svg%3E") !important;
+}
+
+.callout[data-callout="def"] .callout-icon {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z'/%3E%3C/svg%3E") !important;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z'/%3E%3C/svg%3E") !important;
+}
+
+.callout[data-callout="atomic"] .callout-icon {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3Cpath d='M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z'/%3E%3Cpath d='M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z'/%3E%3C/svg%3E") !important;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3Cpath d='M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z'/%3E%3Cpath d='M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z'/%3E%3C/svg%3E") !important;
+}
+
+/* ============================================================
+   LUCIDE ICONS IN CALLOUTS (Match Callout Accent Color)
+   ============================================================ */
+.callout .inline-lucide-icon,
+.callout-title .inline-lucide-icon,
+.callout .cm-iconize-icon,
+.callout-title .cm-iconize-icon {
+  color: inherit !important;
+}
+
+.callout .inline-lucide-icon svg,
+.callout-title .inline-lucide-icon svg,
+.callout .cm-iconize-icon svg,
+.callout-title .cm-iconize-icon svg {
+  stroke: currentColor !important;
+}

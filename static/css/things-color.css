@@ -1,0 +1,332 @@
+/* ============================================================
+   CLINICAL MEDICAL WIKI THEME SNIPPET (UpToDate/Radiopaedia)
+   Synchronized with the PediaNotes website theme.
+   ============================================================ */
+
+/* ============================================================
+   1. CLINICAL LINKS (Clean text, no pill backgrounds)
+   ============================================================ */
+body {
+    /* Override Obsidian defaults with theme-specific custom variables */
+    --link-color: var(--link-custom-color) !important;
+    --link-external-color: var(--link-custom-color) !important;
+    --link-decoration: none !important;
+    --link-external-decoration: none !important;
+    --link-unresolved-color: var(--link-custom-color) !important;
+}
+
+/* Base style for clean text links */
+div.cm-s-obsidian span.cm-link,
+div.cm-s-obsidian span.cm-hmd-internal-link,
+div.cm-s-obsidian span.cm-url,
+a.internal-link,
+a.external-link,
+.markdown-preview-view a,
+.markdown-rendered a {
+    color: var(--link-custom-color) !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    transition: color 0.15s ease, text-decoration 0.15s ease;
+    display: inline;
+    margin: 0;
+}
+
+/* Hover: underline only */
+div.cm-s-obsidian span.cm-link:hover,
+div.cm-s-obsidian span.cm-hmd-internal-link:hover,
+div.cm-s-obsidian span.cm-url:hover,
+a.internal-link:hover,
+a.external-link:hover,
+.markdown-preview-view a:hover,
+.markdown-rendered a:hover {
+    text-decoration: underline !important;
+    border-color: transparent !important;
+}
+
+/* ============================================================
+   2. HEADING STRUCTURE (Clinical Scannable Hierarchy)
+   ============================================================ */
+.cm-header-1, h1 {
+    font-size: 1.75em !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid var(--link-custom-color) !important;
+    padding-bottom: 0.25em;
+    margin-top: 1.2em;
+    margin-bottom: 0.5em;
+    letter-spacing: -0.02em;
+}
+
+.cm-header-2, h2 {
+    font-size: 1.4em !important;
+    font-weight: 650 !important;
+    border-bottom: 1px solid var(--border-subtle, rgba(150,150,150,0.2)) !important;
+    padding-bottom: 0.25em;
+    margin-top: 1.5em;
+    margin-bottom: 0.4em;
+    letter-spacing: -0.01em;
+}
+
+.cm-header-3, h3 {
+    font-size: 1.2em !important;
+    font-weight: 600 !important;
+    margin-top: 1.4em;
+    margin-bottom: 0.35em;
+    letter-spacing: 0;
+}
+
+.cm-header-4, h4 {
+    font-size: 1.0em !important;
+    font-weight: 600 !important;
+    margin-top: 1.3em;
+    margin-bottom: 0.3em;
+    letter-spacing: 0;
+}
+
+.cm-header-5, h5 {
+    font-size: 0.88em !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 1.2em;
+    margin-bottom: 0.25em;
+}
+
+.cm-header-6, h6 {
+    font-size: 0.78em !important;
+    font-weight: 500 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted) !important;
+    margin-top: 1em;
+    margin-bottom: 0.2em;
+}
+
+/* Ensure bold/italic elements in headings inherit color */
+.markdown-rendered h1 *, .markdown-rendered h2 *, .markdown-rendered h3 *,
+.markdown-rendered h4 *, .markdown-rendered h5 *, .markdown-rendered h6 *,
+.cm-header-1 *, .cm-header-2 *, .cm-header-3 *,
+.cm-header-4 *, .cm-header-5 *, .cm-header-6 * {
+    color: inherit !important;
+}
+
+/* ============================================================
+   3. DARK THEME COLORS (Professional Dark Green)
+   ============================================================ */
+.theme-dark {
+    --text-normal: #B5BAC2 !important;  /* Soft professional silver-gray for reduced eye strain */
+    --text-muted: #8891A0 !important;
+    --border-subtle: rgba(255,255,255,0.06);
+
+    /* Links — sky blue, clearly distinct from green headings */
+    --link-custom-color: #60A5FA !important;
+
+    /* Headings — green family, brightness steps down each level */
+    --h1-color: #4ADE80 !important;   /* Vivid emerald   — dominant */
+    --h2-color: #34D399 !important;   /* Cooler emerald  — clearly a step down */
+    --h3-color: #6EE7B7 !important;   /* Soft mint       — receding */
+    --h4-color: #D4D7DD !important;   /* Neutral white   — bold weight + size carries it */
+    --h5-color: #A0ADB8 !important;   /* Blue-gray muted — uppercase does the work */
+    --h6-color: #8891A0 !important;   /* More muted      — least prominent */
+
+    /* Selection highlight — green tinted */
+    --text-selection: rgba(74, 222, 128, 0.22) !important;
+}
+
+.theme-dark .cm-header-1, .theme-dark h1 { color: var(--h1-color) !important; }
+.theme-dark .cm-header-2, .theme-dark h2 { color: var(--h2-color) !important; }
+.theme-dark .cm-header-3, .theme-dark h3 { color: var(--h3-color) !important; }
+.theme-dark .cm-header-4, .theme-dark h4 { color: var(--h4-color) !important; }
+.theme-dark .cm-header-5, .theme-dark h5 { color: var(--h5-color) !important; }
+.theme-dark .cm-header-6, .theme-dark h6 { color: var(--h6-color) !important; }
+
+/* Pure white for bold/italic contrast in dark mode (exclude headings) */
+.theme-dark strong:not(h1 strong, h2 strong, h3 strong, h4 strong, h5 strong, h6 strong),
+.theme-dark b:not(h1 b, h2 b, h3 b, h4 b, h5 b, h6 b),
+.theme-dark .cm-strong,
+.theme-dark em:not(h1 em, h2 em, h3 em, h4 em, h5 em, h6 em),
+.theme-dark i:not(h1 i, h2 i, h3 i, h4 i, h5 i, h6 i),
+.theme-dark .cm-em {
+    color: #FFFFFF !important;
+}
+
+/* ============================================================
+   4. LIGHT THEME COLORS (Professional Dark Green)
+   ============================================================ */
+.theme-light {
+    --text-normal: #333333 !important;  /* Elegant soft black/charcoal for optimal readability */
+    --text-muted: #5A6377 !important;
+    --border-subtle: rgba(0,0,0,0.08);
+
+    /* Links — deep sky blue, clearly a link, distinct from green headings */
+    --link-custom-color: #0284C7 !important;
+
+    /* Headings — dark green family, must be dark enough for white bg contrast */
+    --h1-color: #14532D !important;   /* Deep forest green — most dominant */
+    --h2-color: #166534 !important;   /* Dark green       — step down */
+    --h3-color: #15803D !important;   /* Forest green     — receding */
+    --h4-color: #1A1A2E !important;   /* Neutral dark     — bold + size carries it */
+    --h5-color: #5A6377 !important;   /* Muted gray       — uppercase does the work */
+    --h6-color: #6B7280 !important;   /* More muted       — least prominent */
+
+    /* Selection highlight — forest green tinted */
+    --text-selection: rgba(21, 128, 61, 0.18) !important;
+}
+
+.theme-light .cm-header-1, .theme-light h1 { color: var(--h1-color) !important; }
+.theme-light .cm-header-2, .theme-light h2 { color: var(--h2-color) !important; }
+.theme-light .cm-header-3, .theme-light h3 { color: var(--h3-color) !important; }
+.theme-light .cm-header-4, .theme-light h4 { color: var(--h4-color) !important; }
+.theme-light .cm-header-5, .theme-light h5 { color: var(--h5-color) !important; }
+.theme-light .cm-header-6, .theme-light h6 { color: var(--h6-color) !important; }
+
+/* Darker than normal text for bold/italic in light mode (exclude headings) */
+.theme-light strong:not(h1 strong, h2 strong, h3 strong, h4 strong, h5 strong, h6 strong),
+.theme-light b:not(h1 b, h2 b, h3 b, h4 b, h5 b, h6 b),
+.theme-light .cm-strong,
+.theme-light em:not(h1 em, h2 em, h3 em, h4 em, h5 em, h6 em),
+.theme-light i:not(h1 i, h2 i, h3 i, h4 i, h5 i, h6 i),
+.theme-light .cm-em {
+    color: #000000 !important;
+}
+
+/* ============================================================
+   5. TABLE STYLING — Banded, Column-Separated, No Outer Borders
+   ============================================================ */
+.markdown-rendered table,
+table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin: 1em 0 !important;
+    border: none !important;              /* No outer border */
+}
+
+/* Remove all borders first, then selectively add column separators */
+.markdown-rendered th,
+.markdown-rendered td,
+th, td {
+    padding: 6px 12px !important;
+    border: none !important;              /* Wipe all borders */
+    border-right: 1px solid var(--col-sep) !important;  /* Column separator only */
+}
+
+/* No separator after the last column */
+.markdown-rendered th:last-child,
+.markdown-rendered td:last-child,
+th:last-child, td:last-child {
+    border-right: none !important;
+}
+
+/* ---- LIGHT MODE ---- */
+.theme-light {
+    --col-sep: rgba(21, 128, 61, 0.25);   /* Thin forest-green column line */
+}
+
+.theme-light th {
+    background-color: #166534 !important; /* Dark forest green header */
+    color: #F0FDF4 !important;            /* Near-white text on dark green */
+    font-weight: 600 !important;
+    text-align: left !important;
+}
+
+.theme-light tbody tr:nth-child(odd) {
+    background-color: #FFFFFF !important;
+}
+
+.theme-light tbody tr:nth-child(even) {
+    background-color: #F0FDF4 !important; /* Very light mint band */
+}
+
+.theme-light tbody tr:hover {
+    background-color: #DCFCE7 !important; /* Slightly more visible on hover */
+}
+
+/* ---- DARK MODE ---- */
+.theme-dark {
+    --col-sep: rgba(74, 222, 128, 0.18);  /* Thin emerald-green column line */
+}
+
+.theme-dark th {
+    background-color: #14532D !important; /* Deep forest green header */
+    color: #D1FAE5 !important;            /* Light mint text */
+    font-weight: 600 !important;
+    text-align: left !important;
+}
+
+.theme-dark tbody tr:nth-child(odd) {
+    background-color: transparent !important;
+}
+
+.theme-dark tbody tr:nth-child(even) {
+    background-color: rgba(74, 222, 128, 0.04) !important; /* Subtle green tint band */
+}
+
+.theme-dark tbody tr:hover {
+    background-color: rgba(74, 222, 128, 0.08) !important;
+}
+
+
+
+
+/* ============================================================
+   6. SELECTION HIGHLIGHT (matches green theme)
+   ============================================================ */
+.theme-dark ::selection {
+    background-color: rgba(74, 222, 128, 0.25) !important;
+}
+
+.theme-light ::selection {
+    background-color: rgba(21, 128, 61, 0.15) !important;
+}
+
+/* ============================================================
+   7. TAG COLORS (#hashtag)
+   ============================================================ */
+
+/* Dark mode: warm amber-yellow — visible, warm against green headings */
+.theme-dark .cm-hashtag-begin,
+.theme-dark .cm-hashtag-end,
+.theme-dark .cm-hashtag,
+.theme-dark a.tag,
+.theme-dark .tag {
+    color: #FCD34D !important;           /* amber-300 */
+    background-color: rgba(252, 211, 77, 0.1) !important;
+    border-radius: 4px !important;
+    padding: 1px 4px !important;
+    border: none !important;
+    text-decoration: none !important;
+}
+
+.theme-dark a.tag:hover,
+.theme-dark .tag:hover {
+    background-color: rgba(252, 211, 77, 0.18) !important;
+}
+
+/* Light mode: dark amber — enough contrast on white background */
+.theme-light .cm-hashtag-begin,
+.theme-light .cm-hashtag-end,
+.theme-light .cm-hashtag,
+.theme-light a.tag,
+.theme-light .tag {
+    color: #92400E !important;           /* amber-800 */
+    background-color: rgba(146, 64, 14, 0.07) !important;
+    border-radius: 4px !important;
+    padding: 1px 4px !important;
+    border: none !important;
+    text-decoration: none !important;
+}
+
+.theme-light a.tag:hover,
+.theme-light .tag:hover {
+    background-color: rgba(146, 64, 14, 0.14) !important;
+}
+
+/* ============================================================
+   8. INLINE COLOR SPANS (Light Mode Readability)
+   ============================================================ */
+.theme-light span[style*="color"] {
+    filter: invert(1) hue-rotate(180deg);
+}

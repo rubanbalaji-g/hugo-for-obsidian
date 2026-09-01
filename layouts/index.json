@@ -1,0 +1,10 @@
+[{{ range $i, $page := site.RegularPages }}
+{{ if $i }},{{ end }}
+{
+  "title": {{ (or $page.Title $page.File.BaseFileName) | jsonify }},
+  "url": {{ $page.RelPermalink | jsonify }},
+  "category": {{ $page.Section | humanize | jsonify }},
+  "content": {{ $page.Plain | truncate 5000 | jsonify }},
+  "html": {{ $page.Content | truncate 15000 | jsonify }}
+}
+{{ end }}]
