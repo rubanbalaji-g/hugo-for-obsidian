@@ -1,7 +1,8 @@
 baseURL = "https://example.com/"
 locale = "en"
 title = "My Digital Garden"
-paginate = 50
+[pagination]
+  pagerSize = 50
 pluralizeListTitles = false
 
 [params]
