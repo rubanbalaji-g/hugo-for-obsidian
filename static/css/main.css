@@ -554,7 +554,7 @@ body.theme-dark .moon-icon { display: none; }
   }
 
   .site-layout.has-sidebar.sidebar-collapsed {
-    grid-template-columns: 0px minmax(0, 1fr);
+    grid-template-columns: 1fr;
     gap: 0;
   }
   .site-layout.has-sidebar.sidebar-collapsed .sidebar-nav {
