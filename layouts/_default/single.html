@@ -15,30 +15,72 @@
   </article>
 </div>
 
-<!-- On-Demand Mermaid Loader -->
+<!-- On-Demand Mermaid Loader with Custom Theme Tokens & Re-render Support -->
 <script>
-  if (document.querySelector('.mermaid')) {
-    document.querySelectorAll('.mermaid').forEach(function(el) {
-      el.textContent = el.textContent
-        .replace(/&#34;/g, '"')
-        .replace(/&quot;/g, '"')
-        .replace(/&gt;/g, '>')
-        .replace(/&lt;/g, '<')
-        .replace(/&amp;/g, '&');
+  window.renderMermaidDiagrams = function() {
+    if (typeof mermaid === 'undefined') return;
+    const isDark = document.body.classList.contains('theme-dark');
+    
+    const darkThemeVariables = {
+      darkMode: true,
+      background: 'transparent',
+      primaryColor: '#1e293b',
+      primaryTextColor: '#f3f4f6',
+      primaryBorderColor: '#00a868',
+      lineColor: '#9ca3af',
+      secondaryColor: '#0f172a',
+      tertiaryColor: '#1e293b',
+      nodeBorder: '#3b82f6',
+      clusterBkg: 'rgba(255, 255, 255, 0.04)',
+      clusterBorder: '#475569',
+      edgeLabelBackground: '#1e293b',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
+    };
+
+    const lightThemeVariables = {
+      darkMode: false,
+      background: 'transparent',
+      primaryColor: '#f1f5f9',
+      primaryTextColor: '#0f172a',
+      primaryBorderColor: '#00a868',
+      lineColor: '#475569',
+      secondaryColor: '#e2e8f0',
+      tertiaryColor: '#f8fafc',
+      nodeBorder: '#00a868',
+      clusterBkg: 'rgba(0, 0, 0, 0.03)',
+      clusterBorder: '#cbd5e1',
+      edgeLabelBackground: '#ffffff',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
+    };
+
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: isDark ? darkThemeVariables : lightThemeVariables,
+      securityLevel: 'loose'
     });
 
+    document.querySelectorAll('.mermaid').forEach(function(el) {
+      if (!el.getAttribute('data-original-code')) {
+        el.setAttribute('data-original-code', el.textContent
+          .replace(/&#34;/g, '"')
+          .replace(/&quot;/g, '"')
+          .replace(/&gt;/g, '>')
+          .replace(/&lt;/g, '<')
+          .replace(/&amp;/g, '&'));
+      }
+      el.removeAttribute('data-processed');
+      el.textContent = el.getAttribute('data-original-code');
+    });
+
+    mermaid.run({ querySelector: '.mermaid' });
+  };
+
+  if (document.querySelector('.mermaid')) {
     const s = document.createElement('script');
     s.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
     s.onload = function() {
-      if (typeof mermaid !== 'undefined') {
-        const isDark = document.body.classList.contains('theme-dark');
-        mermaid.initialize({
-          startOnLoad: false,
-          theme: isDark ? 'dark' : 'default',
-          securityLevel: 'loose'
-        });
-        mermaid.run({ querySelector: '.mermaid' });
-      }
+      window.renderMermaidDiagrams();
     };
     document.head.appendChild(s);
   }

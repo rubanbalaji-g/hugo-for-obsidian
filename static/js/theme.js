@@ -10,5 +10,6 @@
     document.body.classList.add(`theme-${newTheme}`);
     localStorage.setItem('theme', newTheme);
     if (typeof lucide !== 'undefined') lucide.createIcons();
+    if (typeof window.renderMermaidDiagrams === 'function') window.renderMermaidDiagrams();
   };
 })();
