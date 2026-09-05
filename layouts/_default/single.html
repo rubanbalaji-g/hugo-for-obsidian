@@ -118,9 +118,9 @@
       'h4 { font-size: 10pt !important; }' +
       'a, .internal-link { color: #059669 !important; text-decoration: underline !important; text-underline-offset: 2px !important; font-weight: 600 !important; }' +
       'table { border-collapse: collapse !important; width: 100% !important; margin: 1em 0 !important; font-size: 9.5pt !important; }' +
-      'th, td { border: 1px solid #cbd5e1 !important; padding: 6px 10px !important; text-align: left !important; vertical-align: top !important; }' +
-      'th { background-color: #ecfdf5 !important; color: #065f46 !important; font-weight: 700 !important; }' +
-      'tr:nth-child(even) td { background-color: #f8fafc !important; }' +
+      'table th, table td { border: 1px solid #cbd5e1 !important; padding: 6px 10px !important; text-align: left !important; vertical-align: top !important; }' +
+      'table th { background-color: #ecfdf5 !important; color: #065f46 !important; font-weight: 700 !important; }' +
+      'table tr:nth-child(even) td { background-color: #f8fafc !important; }' +
       '.callout { border: 1px solid #cbd5e1 !important; border-left: 4px solid #059669 !important; padding: 8px 12px !important; margin: 1em 0 !important; background: #f0fdf4 !important; border-radius: 6px !important; }' +
       '.callout[data-callout="danger"], .callout[data-callout="warning"] { border-left-color: #dc2626 !important; background: #fef2f2 !important; }' +
       '.callout[data-callout="info"], .callout[data-callout="note"] { border-left-color: #2563eb !important; background: #eff6ff !important; }' +
@@ -141,8 +141,8 @@
       '.print-header-right { font-family: Arial, sans-serif; font-size: 7.5pt; color: #475569; text-align: right; line-height: 1.2; }' +
       '@media print { body { padding: 0; margin: 0; } }' +
       '.header-space { height: 14mm; }' +
-      '.content-table { width: 100%; border: none; border-collapse: collapse; }' +
-      '.content-table td { border: none !important; padding: 0 !important; background: transparent; }' +
+      '.content-table { width: 100% !important; border: none !important; border-collapse: collapse !important; }' +
+      '.content-table > thead > tr > td, .content-table > tbody > tr > td { border: none !important; padding: 0 !important; background: transparent !important; }' +
       '</style></head><body>' +
       '<div class="print-page-header">' +
         '<div class="print-header-left"><span class="site-name"><span style="color:' + pediaColor + ';">Pedia</span><span style="color:' + notesColor + ';">Notes</span></span></div>' +
@@ -159,5 +159,17 @@
       printWindow.onafterprint = function() { printWindow.close(); };
     };
   }
+
+  // Intercept Ctrl+P / Cmd+P to invoke custom PediaNotes doPrint modal
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+      e.preventDefault();
+      if (typeof doPrint === 'function') {
+        doPrint();
+      } else {
+        window.print();
+      }
+    }
+  });
 </script>
 {{ end }}
