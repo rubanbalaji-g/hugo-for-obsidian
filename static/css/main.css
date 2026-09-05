@@ -1100,6 +1100,7 @@ img {
 }
 
 .theme-dark .mermaid .flowchart-link {
+  fill: none !important;
   stroke: #9ca3af !important;
   stroke-width: 1.5px !important;
 }
@@ -1131,7 +1132,9 @@ img {
   ry: 4px;
 }
 .theme-light .mermaid .flowchart-link {
+  fill: none !important;
   stroke: #475569 !important;
+  stroke-width: 1.5px !important;
 }
 .theme-light .mermaid .marker {
   fill: #475569 !important;
