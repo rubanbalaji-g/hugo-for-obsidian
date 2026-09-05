@@ -1067,27 +1067,58 @@ img {
   font-family: var(--font-sans) !important;
 }
 
-/* Arrow labels & Text Contrast for Dark Theme */
-.theme-dark .mermaid .edgeLabel,
-.theme-dark .mermaid .label {
+/* Dark Theme Scoped Mermaid Rules */
+.theme-dark .mermaid .node rect,
+.theme-dark .mermaid .node polygon,
+.theme-dark .mermaid .node circle,
+.theme-dark .mermaid .node ellipse,
+.theme-dark .mermaid .node path,
+.theme-dark .mermaid .actor {
+  fill: #1e293b !important;
+  stroke: var(--accent, #00a868) !important;
+  stroke-width: 1.5px !important;
+}
+
+.theme-dark .mermaid .node .label,
+.theme-dark .mermaid .node text,
+.theme-dark .mermaid .node span,
+.theme-dark .mermaid .node div,
+.theme-dark .mermaid .node p {
+  color: #f3f4f6 !important;
+  fill: #f3f4f6 !important;
+}
+
+.theme-dark .mermaid .edgeLabel {
   color: #f3f4f6 !important;
   fill: #f3f4f6 !important;
 }
 .theme-dark .mermaid .edgeLabel rect {
-  fill: #1e293b !important;
+  fill: #0f172a !important;
   opacity: 0.95;
   rx: 4px;
   ry: 4px;
 }
+
 .theme-dark .mermaid .flowchart-link {
   stroke: #9ca3af !important;
+  stroke-width: 1.5px !important;
 }
 .theme-dark .mermaid .marker {
   fill: #9ca3af !important;
   stroke: #9ca3af !important;
 }
 
-/* Arrow labels & Text Contrast for Light Theme */
+.theme-dark .mermaid .cluster rect {
+  fill: rgba(255, 255, 255, 0.04) !important;
+  stroke: #475569 !important;
+}
+.theme-dark .mermaid .cluster span,
+.theme-dark .mermaid .cluster text {
+  color: #94a3b8 !important;
+  fill: #94a3b8 !important;
+}
+
+/* Light Theme Scoped Mermaid Rules */
 .theme-light .mermaid .edgeLabel,
 .theme-light .mermaid .label {
   color: #0f172a !important;
