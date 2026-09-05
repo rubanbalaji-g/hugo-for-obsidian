@@ -90,10 +90,15 @@
     var content = document.querySelector('.note-content');
     if (!content) { window.print(); return; }
 
+    // Clone content and remove site footer element from print output
+    var clone = content.cloneNode(true);
+    var footerEl = clone.querySelector('.site-footer');
+    if (footerEl) footerEl.remove();
+
     var printWindow = window.open('', '_blank', 'width=900,height=700');
     var isDark = document.body.classList.contains('theme-dark');
-    var pediaColor = isDark ? '#AAE5FA' : '#1E3A8A';
-    var notesColor = isDark ? '#FBC8C1' : '#9D174D';
+    var pediaColor = isDark ? '#1E3A8A' : '#1E3A8A';
+    var notesColor = isDark ? '#9D174D' : '#9D174D';
 
     var now = new Date();
     var dateStr = now.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', year: 'numeric' });
@@ -104,20 +109,28 @@
       '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>' + document.title + '</title>' +
       '<style>' +
       '* { box-sizing: border-box; margin: 0; padding: 0; }' +
-      '@page { margin: 15mm 20mm 20mm; @bottom-center { content: "Page " counter(page) " of " counter(pages); font-family: Arial, sans-serif; font-size: 8.5pt; color: #666; } }' +
-      'body { font-family: Georgia, serif; font-size: 12pt; line-height: 1.6; color: #000; background: #fff; padding: 32mm 20mm 18mm; }' +
-      'h1, h2, h3, h4 { font-family: Arial, sans-serif; color: #000; margin: 1em 0 0.5em; page-break-after: avoid; }' +
-      'table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 10pt; }' +
-      'th, td { border: 1px solid #999; padding: 6px 8px; text-align: left; }' +
-      'th { background: #eee; font-weight: bold; }' +
-      '.callout { border: 1px solid #ccc; border-left: 4px solid #666; padding: 8px 12px; margin: 1em 0; background: #fafafa; border-radius: 4px; }' +
-      '.mermaid { display: block !important; width: 100% !important; max-width: 100% !important; max-height: 220mm !important; height: auto !important; margin: 1.5em 0 !important; page-break-inside: avoid !important; break-inside: avoid !important; }' +
+      '@page { margin: 12mm 18mm 15mm; @bottom-center { content: "Page " counter(page) " of " counter(pages); font-family: Arial, sans-serif; font-size: 8pt; color: #666; } }' +
+      'body { font-family: Georgia, serif; font-size: 11pt; line-height: 1.5; color: #000; background: #fff; padding: 18mm 18mm 15mm; }' +
+      'h1, h2, h3, h4 { font-family: Arial, sans-serif; color: #000; margin: 0.8em 0 0.4em; page-break-after: avoid; }' +
+      'table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 9.5pt; }' +
+      'th, td { border: 1px solid #999; padding: 5px 7px; text-align: left; }' +
+      'th { background: #f1f5f9; font-weight: bold; }' +
+      '.callout { border: 1px solid #ccc; border-left: 4px solid #00a868; padding: 6px 10px; margin: 0.8em 0; background: #f8fafc; border-radius: 4px; }' +
+      '.site-footer, .footer-container, .copyright, .disclaimer { display: none !important; }' +
+      '.mermaid { display: block !important; width: 100% !important; max-width: 100% !important; max-height: 220mm !important; height: auto !important; margin: 1em 0 !important; page-break-inside: avoid !important; break-inside: avoid !important; }' +
       '.mermaid svg { display: block !important; max-width: 100% !important; max-height: 215mm !important; height: auto !important; width: auto !important; margin: 0 auto !important; }' +
-      '.print-page-header { position: fixed; top: 0; left: 0; right: 0; height: 28mm; display: flex; align-items: center; justify-content: space-between; background: #fff; padding: 4px 20mm; border-bottom: 1px solid #ddd; }' +
-      '.print-header-left .site-name { font-family: Arial, sans-serif; font-size: 18pt; font-weight: bold; }' +
-      '.print-header-right { font-family: Arial, sans-serif; font-size: 8pt; color: #333; text-align: right; }' +
+      '.mermaid .node rect, .mermaid .node polygon, .mermaid .node circle, .mermaid .node ellipse, .mermaid .node path { fill: #f8fafc !important; stroke: #00a868 !important; stroke-width: 1.5px !important; }' +
+      '.mermaid .node .label, .mermaid .node text, .mermaid .node span, .mermaid .node div, .mermaid .node p { color: #0f172a !important; fill: #0f172a !important; font-family: Arial, sans-serif !important; }' +
+      '.mermaid .flowchart-link, .mermaid .marker { stroke: #334155 !important; fill: #334155 !important; }' +
+      '.mermaid .edgeLabel { color: #0f172a !important; fill: #0f172a !important; }' +
+      '.mermaid .edgeLabel rect { fill: #ffffff !important; opacity: 0.95; stroke: #cbd5e1 !important; }' +
+      '.mermaid .cluster rect { fill: rgba(0, 0, 0, 0.03) !important; stroke: #cbd5e1 !important; }' +
+      '.mermaid .cluster text, .mermaid .cluster span { color: #475569 !important; fill: #475569 !important; }' +
+      '.print-page-header { position: fixed; top: 0; left: 0; right: 0; height: 14mm; display: flex; align-items: center; justify-content: space-between; background: #fff; padding: 2px 18mm; border-bottom: 1px solid #e2e8f0; }' +
+      '.print-header-left .site-name { font-family: Arial, sans-serif; font-size: 12pt; font-weight: bold; }' +
+      '.print-header-right { font-family: Arial, sans-serif; font-size: 7.5pt; color: #475569; text-align: right; line-height: 1.2; }' +
       '@media print { body { padding: 0; margin: 0; } }' +
-      '.header-space { height: 28mm; }' +
+      '.header-space { height: 14mm; }' +
       '.content-table { width: 100%; border: none; border-collapse: collapse; }' +
       '.content-table td { border: none !important; padding: 0 !important; background: transparent; }' +
       '</style></head><body>' +
@@ -126,7 +139,7 @@
         '<div class="print-header-right"><div>' + pageUrl + '</div><div>' + dateStr + ' ' + timeStr + ' IST</div><div style="font-weight:bold;">Dr. Rubanbalaji</div></div>' +
       '</div>' +
       '<table class="content-table"><thead><tr><td><div class="header-space">&nbsp;</div></td></tr></thead><tbody><tr><td>' +
-      content.innerHTML +
+      clone.innerHTML +
       '</td></tr></tbody></table></body></html>'
     );
     printWindow.document.close();
