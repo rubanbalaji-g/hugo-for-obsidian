@@ -1,0 +1,74 @@
+<!-- ViewerJS CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.min.js"></script>
+
+<script>
+(function() {
+  var viewerInstance = null;
+
+  function isZoomable(img) {
+    if (!img || img.tagName !== 'IMG') return false;
+    if (img.classList.contains('no-zoom') || img.classList.contains('logo') || img.classList.contains('brand-logo')) return false;
+    return true;
+  }
+
+  function initImageViewer() {
+    if (typeof Viewer === 'undefined') {
+      setTimeout(initImageViewer, 100);
+      return;
+    }
+    var content = document.querySelector('.note-content') || document.querySelector('main') || document.body;
+    if (!content) return;
+
+    if (viewerInstance) {
+      try { viewerInstance.destroy(); } catch(e) {}
+    }
+
+    var imgs = Array.from(content.querySelectorAll('img')).filter(isZoomable);
+    if (!imgs.length) return;
+
+    imgs.forEach(function(img) {
+      img.classList.add('osce-zoomable-img');
+      if (!img.title && img.alt) img.title = img.alt;
+      if (!img.getAttribute('title')) img.setAttribute('title', 'Click to zoom and pan figure');
+    });
+
+    viewerInstance = new Viewer(content, {
+      filter: isZoomable,
+      navbar: imgs.length > 1,
+      title: function(image) { return image.alt || image.title || 'OSCE Clinical Figure'; },
+      toolbar: {
+        zoomIn: { show: 1, size: 'large' },
+        zoomOut: { show: 1, size: 'large' },
+        oneToOne: { show: 1, size: 'large' },
+        reset: { show: 1, size: 'large' },
+        prev: imgs.length > 1 ? 1 : 0,
+        play: 0,
+        next: imgs.length > 1 ? 1 : 0,
+        rotateLeft: 1,
+        rotateRight: 1,
+        flipHorizontal: 1,
+        flipVertical: 1,
+      },
+      tooltip: true,
+      movable: true,
+      zoomable: true,
+      rotatable: true,
+      scalable: true,
+      transition: true,
+      fullscreen: true
+    });
+
+    window.refreshImageViewer = function() {
+      if (viewerInstance) viewerInstance.update();
+    };
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initImageViewer);
+  } else {
+    initImageViewer();
+  }
+  window.addEventListener('load', initImageViewer);
+})();
+</script>
