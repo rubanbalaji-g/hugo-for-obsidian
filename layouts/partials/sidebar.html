@@ -28,7 +28,7 @@
   {{ $titleMap := merge $defaultTitleMap (or site.Params.sidebarTitles (dict)) }}
 
   <div class="sidebar-sections" id="sidebar-sections">
-    {{ range site.Sections }}
+    {{ range site.Sections.ByWeight }}
       {{ $section := . }}
       {{ $isCurrentSection := eq $.Section $section.Section }}
       {{ $secIndexNote := "" }}
