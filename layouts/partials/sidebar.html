@@ -27,8 +27,15 @@
   }}
   {{ $titleMap := merge $defaultTitleMap (or site.Params.sidebarTitles (dict)) }}
 
+  {{/* 1. Sort sections: Weighted (> 0) first in ascending order, followed by unweighted (== 0) sorted alphabetically */}}
+  {{ $weightedSections := where site.Sections "Weight" ">" 0 }}
+  {{ $weightedSections = sort $weightedSections "Weight" "asc" }}
+  {{ $unweightedSections := where site.Sections "Weight" "==" 0 }}
+  {{ $unweightedSections = sort $unweightedSections "Title" "asc" }}
+  {{ $sortedSections := union $weightedSections $unweightedSections }}
+
   <div class="sidebar-sections" id="sidebar-sections">
-    {{ range site.Sections.ByWeight }}
+    {{ range $sortedSections }}
       {{ $section := . }}
       {{ $isCurrentSection := eq $.Section $section.Section }}
       {{ $secIndexNote := "" }}
@@ -60,8 +67,15 @@
           <span class="section-count">{{ len $section.RegularPages }}</span>
         </div>
 
+        {{/* 2. Sort notes: Weighted (> 0) first in ascending order, then unweighted sorted by filename */}}
+        {{ $weightedPages := where $section.RegularPages "Weight" ">" 0 }}
+        {{ $weightedPages = sort $weightedPages "Weight" "asc" }}
+        {{ $unweightedPages := where $section.RegularPages "Weight" "==" 0 }}
+        {{ $unweightedPages = sort $unweightedPages "File.BaseFileName" "asc" }}
+        {{ $sortedPages := union $weightedPages $unweightedPages }}
+
         <ul class="sidebar-notes-list" style="{{ if $isCurrentSection }}display: block;{{ else }}display: none;{{ end }}">
-          {{ range (sort $section.RegularPages "Weight") }}
+          {{ range $sortedPages }}
             {{ $isPageActive := eq $.RelPermalink .RelPermalink }}
             <li class="sidebar-note-item">
               <a href="{{ .RelPermalink }}" class="sidebar-note-link {{ if $isPageActive }}active{{ end }}">
