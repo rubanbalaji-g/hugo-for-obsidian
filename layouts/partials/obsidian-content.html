@@ -1,7 +1,19 @@
 {{ $content := .Content }}
+{{ $site := .Site }}
 
-{{/* 1. Transform Obsidian Callouts (Matches any blockquote with [!type]) */}}
-{{ $content = replaceRE `<blockquote>\s*<p>\s*\[!([a-zA-Z0-9_-]+)\][ \t]*([^\n<]*)(?:<br\s*\/?>)?([\s\S]*?)<\/blockquote>` `<div class="callout" data-callout="$1"><div class="callout-title"><span class="callout-title-text">$2</span></div><div class="callout-content"><p>$3</div></div>` $content }}
+{{/* 1. Transform Obsidian Callouts */}}
+{{ $callouts := findRESubmatch `<blockquote>\s*<p>\s*\[!([a-zA-Z0-9_-]+)\][+-]?[ \t]*([^\n<]*)(?:<br\s*\/?>)?([\s\S]*?)<\/blockquote>` $content }}
+{{ range $callouts }}
+  {{ $fullBlock := index . 0 }}
+  {{ $calloutType := lower (index . 1) }}
+  {{ $calloutTitle := index . 2 }}
+  {{ $calloutBody := index . 3 }}
+  {{ if not $calloutTitle }}
+    {{ $calloutTitle = title $calloutType }}
+  {{ end }}
+  {{ $calloutHtml := printf `<div class="callout" data-callout="%s"><div class="callout-title"><span class="callout-title-text">%s</span></div><div class="callout-content"><p>%s</div></div>` $calloutType $calloutTitle $calloutBody }}
+  {{ $content = replace $content $fullBlock $calloutHtml }}
+{{ end }}
 
 {{/* 2. Transform Mermaid code blocks to pre.mermaid */}}
 {{ $content = replaceRE `<pre[^>]*><code class="language-mermaid"[^>]*>([\s\S]*?)<\/code><\/pre>` `<pre class="mermaid">$1</pre>` $content }}
@@ -18,7 +30,43 @@
   {{ $cleanTarget := replace $target "\\" "/" }}
   {{ $cleanTarget = strings.TrimPrefix "notes/" $cleanTarget }}
   {{ $cleanTarget = strings.TrimPrefix "/" $cleanTarget }}
-  {{ $href := printf "/%s/" (urlize $cleanTarget) }}
+  {{ $cleanTarget = strings.TrimSuffix ".md" $cleanTarget }}
+  {{ $isIndex := false }}
+  {{ if or (strings.HasSuffix $cleanTarget "/_index") (strings.HasSuffix $cleanTarget "/Index") (strings.HasSuffix $cleanTarget "/index") (eq $cleanTarget "_index") (eq $cleanTarget "Index") (eq $cleanTarget "index") }}
+    {{ $isIndex = true }}
+    {{ $cleanTarget = strings.TrimSuffix "/_index" $cleanTarget }}
+    {{ $cleanTarget = strings.TrimSuffix "/Index" $cleanTarget }}
+    {{ $cleanTarget = strings.TrimSuffix "/index" $cleanTarget }}
+  {{ end }}
+  
+  {{/* Try resolving target via Site pages */}}
+  {{ $foundPage := false }}
+  {{ with $site.GetPage $cleanTarget }}
+    {{ $foundPage = . }}
+  {{ else }}
+    {{ with $site.GetPage (printf "/%s" $cleanTarget) }}
+      {{ $foundPage = . }}
+    {{ else }}
+      {{ range $site.Pages }}
+        {{ if not $foundPage }}
+          {{ $baseName := "" }}
+          {{ with .File }}
+            {{ $baseName = .BaseFileName }}
+          {{ end }}
+          {{ if or (eq $baseName (path.Base $cleanTarget)) (eq .Title (path.Base $cleanTarget)) (eq $baseName $cleanTarget) (eq .Title $cleanTarget) }}
+            {{ $foundPage = . }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{ $href := "" }}
+  {{ if $foundPage }}
+    {{ $href = $foundPage.RelPermalink }}
+  {{ else }}
+    {{ $href = printf "/%s/" (urlize $cleanTarget) }}
+  {{ end }}
   {{ $linkTag := printf `<a href="%s" class="internal-link">%s</a>` $href $label }}
   {{ $content = replace $content $fullMatch $linkTag }}
 {{ end }}

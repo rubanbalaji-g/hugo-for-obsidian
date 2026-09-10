@@ -1,26 +1,31 @@
 {{ define "main" }}
 {{ $sectionTitle := or .Title .File.BaseFileName }}
-<div class="list-container">
-  <header class="list-header">
-    <nav class="breadcrumb-trail" aria-label="Breadcrumbs">
-      <a href="{{ "/" | relURL }}">Home</a>
-      <span class="breadcrumb-separator">/</span>
-      <span class="breadcrumb-current">{{ $sectionTitle }}</span>
-    </nav>
+<div class="note-container">
+  {{ partial "breadcrumbs.html" . }}
 
-    <h1 class="list-title">{{ $sectionTitle }}</h1>
-    <p class="list-count">{{ len .RegularPages }} clinical notes</p>
-  </header>
+  <article class="clinical-note">
+    <div class="note-body-wrapper">
+      <div class="note-content cm-s-obsidian">
+        {{ if .Content }}
+          {{ partial "obsidian-content.html" . }}
+        {{ else }}
+          <h1 class="list-title">{{ $sectionTitle }}</h1>
+          <p class="list-count">{{ len .RegularPages }} clinical notes</p>
+          <div class="notes-grid">
+            {{ range .RegularPages.ByTitle }}
+            <a href="{{ .RelPermalink }}" class="note-card">
+              <div class="note-card-title">{{ or .Title .File.BaseFileName }}</div>
+              <div class="note-card-snippet">{{ .Plain | truncate 120 }}</div>
+            </a>
+            {{ end }}
+          </div>
+        {{ end }}
+        {{ partial "footer.html" . }}
+        {{ partial "image-viewer.html" . }}
+      </div>
 
-  <div class="notes-grid">
-    {{ range .RegularPages.ByTitle }}
-    <a href="{{ .RelPermalink }}" class="note-card">
-      <div class="note-card-title">{{ or .Title .File.BaseFileName }}</div>
-      <div class="note-card-snippet">{{ .Plain | truncate 120 }}</div>
-    </a>
-    {{ end }}
-  </div>
-
-  {{ partial "footer.html" . }}
+      {{ partial "toc.html" . }}
+    </div>
+  </article>
 </div>
 {{ end }}
