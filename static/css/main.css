@@ -1140,3 +1140,37 @@ img {
   fill: #475569 !important;
   stroke: #475569 !important;
 }
+
+/* Heading & Title Theming */
+.note-title {
+  color: var(--accent) !important;
+}
+
+.breadcrumb-current {
+  color: var(--accent) !important;
+}
+
+.note-content h1 {
+  color: var(--accent) !important;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.25rem;
+}
+
+.note-content h2 {
+  color: var(--accent-hover, var(--accent)) !important;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.2rem;
+}
+
+.note-content h3 {
+  color: var(--accent) !important;
+}
+
+.note-content table th {
+  background-color: var(--accent) !important;
+  color: #ffffff !important;
+}
+
+.note-content table tr:nth-child(even) {
+  background-color: rgba(128, 128, 128, 0.05) !important;
+}
