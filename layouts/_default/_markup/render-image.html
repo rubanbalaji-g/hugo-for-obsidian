@@ -28,4 +28,18 @@
   {{ $finalAlt = printf "%s | %s" $cleanAlt $floatDir }}
 {{ end }}
 
-<img src="{{ $src | safeURL }}" alt="{{ $finalAlt }}" {{ with $width }}width="{{ . }}" style="max-width: {{ . }}px; width: 100%;"{{ end }} class="{{ $floatClass }}" loading="lazy" decoding="async" />
+{{/* Normalize image src to root-relative path */}}
+{{ $normSrc := $src }}
+{{ if strings.HasPrefix $normSrc "../images/" }}
+  {{ $normSrc = strings.TrimPrefix ".." $normSrc }}
+{{ else if strings.HasPrefix $normSrc "images/" }}
+  {{ $normSrc = printf "/%s" $normSrc }}
+{{ else if strings.HasPrefix $normSrc "../img/" }}
+  {{ $normSrc = strings.TrimPrefix ".." $normSrc }}
+{{ else if strings.HasPrefix $normSrc "img/" }}
+  {{ $normSrc = printf "/%s" $normSrc }}
+{{ else if and (not (strings.HasPrefix $normSrc "http://")) (not (strings.HasPrefix $normSrc "https://")) (not (strings.HasPrefix $normSrc "/")) }}
+  {{ $normSrc = printf "/images/%s" $normSrc }}
+{{ end }}
+
+<img src="{{ $normSrc | safeURL }}" alt="{{ $finalAlt }}" {{ with $width }}width="{{ . }}" style="max-width: {{ . }}px; width: 100%;"{{ end }} class="{{ $floatClass }}" loading="lazy" decoding="async" />
