@@ -27,7 +27,31 @@
 <!-- KaTeX Math -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script>
+  function renderAllMath() {
+    if (typeof renderMathInElement !== 'undefined') {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false,
+        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+      });
+    } else {
+      setTimeout(renderAllMath, 50);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", renderAllMath);
+  } else {
+    renderAllMath();
+  }
+  window.addEventListener("load", renderAllMath);
+</script>
 
 <!-- Styles with Cache Busting -->
 <link rel="stylesheet" href="{{ "/css/main.css" | relURL }}?v={{ now.Unix }}">
@@ -58,10 +82,7 @@
     "@type": "MedicalAudience",
     "medicalSpecialty": "Pediatrics"
   },
-  "publisher": {
-    "@type": "Organization",
-    "name": "PediaNotes"
-  }
+  "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}"
 }
 </script>
 {{ end }}
