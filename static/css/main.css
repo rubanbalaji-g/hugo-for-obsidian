@@ -552,6 +552,7 @@ body.theme-dark .moon-icon { display: none; }
     z-index: 100;
   }
 
+  .site-layout,
   .site-layout.has-sidebar {
     display: grid;
     grid-template-columns: 280px minmax(0, 1fr);
@@ -567,12 +568,18 @@ body.theme-dark .moon-icon { display: none; }
     transition: grid-template-columns 0.2s ease;
   }
 
-  .site-layout.has-sidebar.sidebar-collapsed {
-    grid-template-columns: 1fr;
-    gap: 0;
+  .site-layout.sidebar-collapsed,
+  .site-layout.no-sidebar,
+  .site-layout.has-sidebar.sidebar-collapsed,
+  .site-layout.has-sidebar.no-sidebar {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
   }
-  .site-layout.has-sidebar.sidebar-collapsed .sidebar-nav {
-    display: none;
+  .site-layout.sidebar-collapsed .sidebar-nav,
+  .site-layout.no-sidebar .sidebar-nav,
+  .site-layout.has-sidebar.sidebar-collapsed .sidebar-nav,
+  .site-layout.has-sidebar.no-sidebar .sidebar-nav {
+    display: none !important;
   }
 
   /* Left Sidebar: Fixed in place with its own scrollbar */
