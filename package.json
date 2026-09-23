@@ -1,0 +1,10 @@
+{
+  "name": "hugo-for-obsidian",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Hugo theme and template for publishing Obsidian vaults",
+  "scripts": {
+    "prebuild": "node prebuild.mjs",
+    "build": "node prebuild.mjs && hugo --minify"
+  }
+}

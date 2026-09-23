@@ -28,6 +28,14 @@ jobs:
           hugo-version: 'latest'
           extended: true
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Preprocess Index Notes
+        run: node prebuild.mjs
+
       - name: Build Hugo Site
         env:
           CUSTOM_DOMAIN: ${{ vars.CUSTOM_DOMAIN || vars.SITE_DOMAIN }}
