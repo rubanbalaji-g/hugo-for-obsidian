@@ -9,13 +9,17 @@
   {{ $doNotDisplayRaw := "" }}
   {{ if fileExists "content/do.not.display.md" }}
     {{ $doNotDisplayRaw = readFile "content/do.not.display.md" }}
+  {{ else if fileExists "content/do.not.display" }}
+    {{ $doNotDisplayRaw = readFile "content/do.not.display" }}
   {{ else if fileExists "do.not.display.md" }}
     {{ $doNotDisplayRaw = readFile "do.not.display.md" }}
+  {{ else if fileExists "do.not.display" }}
+    {{ $doNotDisplayRaw = readFile "do.not.display" }}
   {{ end }}
   {{ if $doNotDisplayRaw }}
     {{ range (split $doNotDisplayRaw "\n") }}
       {{ $line := trim . " \r\t" }}
-      {{ if and $line (not (strings.HasPrefix $line "#")) }}
+      {{ if and $line (not (strings.HasPrefix $line "#")) (not (strings.HasPrefix $line "---")) (not (strings.HasPrefix (lower $line) "publish:")) }}
         {{ $parts := split $line ">>" }}
         {{ $cleanParts := slice }}
         {{ range $parts }}
@@ -43,8 +47,12 @@
   {{ $treeWeights := dict }}
   {{ $hasTreeWeight := false }}
   {{ $treeWeightRaw := "" }}
-  {{ if fileExists "content/tree.weight" }}
+  {{ if fileExists "content/tree.weight.md" }}
+    {{ $treeWeightRaw = readFile "content/tree.weight.md" }}
+  {{ else if fileExists "content/tree.weight" }}
     {{ $treeWeightRaw = readFile "content/tree.weight" }}
+  {{ else if fileExists "tree.weight.md" }}
+    {{ $treeWeightRaw = readFile "tree.weight.md" }}
   {{ else if fileExists "tree.weight" }}
     {{ $treeWeightRaw = readFile "tree.weight" }}
   {{ end }}
@@ -53,7 +61,7 @@
     {{ $weightIdx := 0 }}
     {{ range (split $treeWeightRaw "\n") }}
       {{ $line := trim . " \r\t" }}
-      {{ if and $line (not (strings.HasPrefix $line "#")) }}
+      {{ if and $line (not (strings.HasPrefix $line "#")) (not (strings.HasPrefix $line "---")) (not (strings.HasPrefix (lower $line) "publish:")) }}
         {{ $parts := split $line ">>" }}
         {{ $cleanParts := slice }}
         {{ range $parts }}
