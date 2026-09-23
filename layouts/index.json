@@ -1,10 +1,16 @@
-[{{ range $i, $page := site.RegularPages }}
-{{ if $i }},{{ end }}
-{
-  "title": {{ (or $page.Title $page.File.BaseFileName) | jsonify }},
-  "url": {{ $page.RelPermalink | jsonify }},
-  "category": {{ (or (index (dict "social-pediatics" "Social Pediatrics" "social pediatics" "Social Pediatrics" "infectious-diseases" "Infectious Diseases" "infectious diseases" "Infectious Diseases" "metabolic-disorders" "Metabolic Disorders" "metabolic disorders" "Metabolic Disorders") (lower $page.Section)) ($page.Section | humanize)) | jsonify }},
-  "tags": {{ (or $page.Params.tags slice) | jsonify }},
-  "snippet": {{ ($page.Plain | truncate 350) | jsonify }}
-}
+[{{ $first := true }}
+{{ range $page := site.RegularPages }}
+  {{ $baseName := $page.File.BaseFileName }}
+  {{ $logicalName := $page.File.LogicalName }}
+  {{ if not (or (eq $logicalName "do.not.display.md") (eq $baseName "tree.weight") (strings.HasPrefix $baseName "tree.weight")) }}
+    {{ if not $first }},{{ end }}
+    {{ $first = false }}
+    {
+      "title": {{ (or $page.Title $page.File.BaseFileName) | jsonify }},
+      "url": {{ $page.RelPermalink | jsonify }},
+      "category": {{ (or (index (dict "social-pediatics" "Social Pediatrics" "social pediatics" "Social Pediatrics" "infectious-diseases" "Infectious Diseases" "infectious diseases" "Infectious Diseases" "metabolic-disorders" "Metabolic Disorders" "metabolic disorders" "Metabolic Disorders") (lower $page.Section)) ($page.Section | humanize)) | jsonify }},
+      "tags": {{ (or $page.Params.tags slice) | jsonify }},
+      "snippet": {{ ($page.Plain | truncate 350) | jsonify }}
+    }
+  {{ end }}
 {{ end }}]

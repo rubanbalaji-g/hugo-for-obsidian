@@ -1,9 +1,12 @@
 <header class="site-header">
   <div class="header-container">
     <div class="header-left">
+      {{ $noTopics := or (index .Params "no.topics") (index .Params "notopics") (and .Params.no (index .Params.no "topics")) (eq .Params.notopics true) }}
+      {{ if not $noTopics }}
       <button class="icon-btn sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Sidebar" title="Toggle Sidebar">
         <i data-lucide="panel-left"></i>
       </button>
+      {{ end }}
 
       <a href="{{ "/" | relURL }}" class="brand-link">
         {{ if site.Params.logo }}

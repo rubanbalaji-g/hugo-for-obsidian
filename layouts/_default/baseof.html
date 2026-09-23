@@ -6,8 +6,11 @@
 <body class="theme-dark">
   {{ partial "header.html" . }}
   
-  <div class="site-layout has-sidebar" id="site-layout">
-    {{ partial "sidebar.html" . }}
+  {{ $noTopics := or (index .Params "no.topics") (index .Params "notopics") (and .Params.no (index .Params.no "topics")) (eq .Params.notopics true) }}
+  <div class="site-layout has-sidebar{{ if $noTopics }} sidebar-collapsed no-sidebar{{ end }}" id="site-layout">
+    {{ if not $noTopics }}
+      {{ partial "sidebar.html" . }}
+    {{ end }}
     <main class="main-content">
       {{ block "main" . }}{{ end }}
     </main>

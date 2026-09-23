@@ -1,6 +1,7 @@
 baseURL = "https://example.com/"
 locale = "en"
 title = "My Digital Garden"
+ignoreFiles = ['do\.not\.display\.md$', 'tree\.weight.*$']
 [pagination]
   pagerSize = 50
 pluralizeListTitles = false

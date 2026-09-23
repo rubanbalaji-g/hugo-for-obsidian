@@ -4,6 +4,82 @@
     <span class="sidebar-badge">{{ len site.RegularPages }} Notes</span>
   </div>
 
+  {{/* ── 1. Read & Parse do.not.display.md ────────────────────────── */}}
+  {{ $hiddenPaths := dict }}
+  {{ $doNotDisplayRaw := "" }}
+  {{ if fileExists "content/do.not.display.md" }}
+    {{ $doNotDisplayRaw = readFile "content/do.not.display.md" }}
+  {{ else if fileExists "do.not.display.md" }}
+    {{ $doNotDisplayRaw = readFile "do.not.display.md" }}
+  {{ end }}
+  {{ if $doNotDisplayRaw }}
+    {{ range (split $doNotDisplayRaw "\n") }}
+      {{ $line := trim . " \r\t" }}
+      {{ if and $line (not (strings.HasPrefix $line "#")) }}
+        {{ $parts := split $line ">>" }}
+        {{ $cleanParts := slice }}
+        {{ range $parts }}
+          {{ $part := trim . " \r\t" }}
+          {{ if $part }}
+            {{ $cleanParts = $cleanParts | append (lower $part) }}
+          {{ end }}
+        {{ end }}
+        {{ if gt (len $cleanParts) 0 }}
+          {{ $pSlash := delimit $cleanParts "/" }}
+          {{ $hiddenPaths = merge $hiddenPaths (dict $pSlash true) }}
+          {{ $hiddenPaths = merge $hiddenPaths (dict (replace $pSlash " " "-") true) }}
+          {{ $hiddenPaths = merge $hiddenPaths (dict (replace $pSlash "-" " ") true) }}
+          {{ if eq (len $cleanParts) 1 }}
+            {{ $single := index $cleanParts 0 }}
+            {{ $hiddenPaths = merge $hiddenPaths (dict $single true) }}
+            {{ $hiddenPaths = merge $hiddenPaths (dict (replace $single " " "-") true) }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{/* ── 2. Read & Parse tree.weight (for directories and files) ───── */}}
+  {{ $treeWeights := dict }}
+  {{ $hasTreeWeight := false }}
+  {{ $treeWeightRaw := "" }}
+  {{ if fileExists "content/tree.weight" }}
+    {{ $treeWeightRaw = readFile "content/tree.weight" }}
+  {{ else if fileExists "tree.weight" }}
+    {{ $treeWeightRaw = readFile "tree.weight" }}
+  {{ end }}
+  {{ if $treeWeightRaw }}
+    {{ $hasTreeWeight = true }}
+    {{ $weightIdx := 0 }}
+    {{ range (split $treeWeightRaw "\n") }}
+      {{ $line := trim . " \r\t" }}
+      {{ if and $line (not (strings.HasPrefix $line "#")) }}
+        {{ $parts := split $line ">>" }}
+        {{ $cleanParts := slice }}
+        {{ range $parts }}
+          {{ $part := trim . " \r\t" }}
+          {{ if $part }}
+            {{ $cleanParts = $cleanParts | append (lower $part) }}
+          {{ end }}
+        {{ end }}
+        {{ if gt (len $cleanParts) 0 }}
+          {{ $pSlash := delimit $cleanParts "/" }}
+          {{ $treeWeights = merge $treeWeights (dict $pSlash $weightIdx) }}
+          {{ $treeWeights = merge $treeWeights (dict (replace $pSlash " " "-") $weightIdx) }}
+          {{ $treeWeights = merge $treeWeights (dict (replace $pSlash "-" " ") $weightIdx) }}
+          {{ $leaf := index $cleanParts (sub (len $cleanParts) 1) }}
+          {{ $treeWeights = merge $treeWeights (dict $leaf $weightIdx) }}
+          {{ if strings.HasSuffix $leaf ".md" }}
+            {{ $treeWeights = merge $treeWeights (dict (strings.TrimSuffix ".md" $leaf) $weightIdx) }}
+          {{ else }}
+            {{ $treeWeights = merge $treeWeights (dict (printf "%s.md" $leaf) $weightIdx) }}
+          {{ end }}
+          {{ $weightIdx = add $weightIdx 1 }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
   {{ $defaultIconMap := dict
     "getting-started" "rocket"
     "getting started" "rocket"
@@ -27,16 +103,95 @@
   }}
   {{ $titleMap := merge $defaultTitleMap (or site.Params.sidebarTitles (dict)) }}
 
-  {{/* 1. Sort sections: Weighted (> 0) first in ascending order, followed by unweighted (== 0) sorted alphabetically */}}
-  {{ $weightedSections := where site.Sections "Weight" ">" 0 }}
-  {{ $weightedSections = sort $weightedSections "Weight" "asc" }}
-  {{ $unweightedSections := where site.Sections "Weight" "==" 0 }}
-  {{ $unweightedSections = sort $unweightedSections "Title" "asc" }}
-  {{ $sortedSections := union $weightedSections $unweightedSections }}
-
   <div class="sidebar-sections" id="sidebar-sections">
+
+    {{/* ── 3. Root Level Notes (directly in content/) ─────────────── */}}
+    {{ $rootNotes := slice }}
+    {{ range (where site.RegularPages "Section" "") }}
+      {{ $p := . }}
+      {{ $bName := $p.File.BaseFileName }}
+      {{ $lName := $p.File.LogicalName }}
+      {{ if not (or (eq $lName "do.not.display.md") (eq $bName "tree.weight") (strings.HasPrefix $bName "tree.weight")) }}
+        {{ $fWeight := 999999 }}
+        {{ if $hasTreeWeight }}
+          {{ $k1 := lower $lName }}
+          {{ $k2 := lower $bName }}
+          {{ $k3 := lower (or $p.Title "") }}
+          {{ if isset $treeWeights $k1 }}
+            {{ $fWeight = index $treeWeights $k1 }}
+          {{ else if isset $treeWeights $k2 }}
+            {{ $fWeight = index $treeWeights $k2 }}
+          {{ else if isset $treeWeights $k3 }}
+            {{ $fWeight = index $treeWeights $k3 }}
+          {{ end }}
+        {{ else if gt $p.Weight 0 }}
+          {{ $fWeight = $p.Weight }}
+        {{ end }}
+        {{ $rootNotes = $rootNotes | append (dict "page" $p "weight" $fWeight "title" (lower (or $p.Title $bName))) }}
+      {{ end }}
+    {{ end }}
+
+    {{ if gt (len $rootNotes) 0 }}
+      {{ $wRoot := where $rootNotes "weight" "<" 999999 }}
+      {{ $wRoot = sort $wRoot "weight" "asc" }}
+      {{ $uRoot := where $rootNotes "weight" "==" 999999 }}
+      {{ $uRoot = sort $uRoot "title" "asc" }}
+      {{ $sortedRootNotes := slice }}
+      {{ range $wRoot }}{{ $sortedRootNotes = $sortedRootNotes | append . }}{{ end }}
+      {{ range $uRoot }}{{ $sortedRootNotes = $sortedRootNotes | append . }}{{ end }}
+      <ul class="sidebar-notes-list sidebar-root-notes" style="margin-left: 0; padding-left: 0; border-left: none; margin-bottom: 0.75rem;">
+        {{ range $sortedRootNotes }}
+          {{ $page := .page }}
+          {{ $isPageActive := eq $.RelPermalink $page.RelPermalink }}
+          <li class="sidebar-note-item">
+            <a href="{{ $page.RelPermalink }}" class="sidebar-note-link {{ if $isPageActive }}active{{ end }}">
+              {{ if $page.Params.icon }}
+                <i data-lucide="{{ $page.Params.icon }}" class="sidebar-note-icon"></i>
+              {{ else }}
+                <i data-lucide="file-text" class="sidebar-note-icon"></i>
+              {{ end }}
+              <span class="sidebar-note-title">{{ or $page.Title $page.File.BaseFileName }}</span>
+            </a>
+          </li>
+        {{ end }}
+      </ul>
+    {{ end }}
+
+    {{/* ── 4. Build & Sort Sections ───────────────────────────────── */}}
+    {{ $sectionItems := slice }}
+    {{ range site.Sections }}
+      {{ $sec := . }}
+      {{ $secKey := lower $sec.Section }}
+      {{ $secKeyClean := replace $secKey "-" " " }}
+      {{/* Check do.not.display.md */}}
+      {{ $isExcluded := or (index $hiddenPaths $secKey) (index $hiddenPaths $secKeyClean) }}
+      {{ if not $isExcluded }}
+        {{ $secWeight := 999999 }}
+        {{ if $hasTreeWeight }}
+          {{ if isset $treeWeights $secKey }}
+            {{ $secWeight = index $treeWeights $secKey }}
+          {{ else if isset $treeWeights $secKeyClean }}
+            {{ $secWeight = index $treeWeights $secKeyClean }}
+          {{ else if isset $treeWeights (lower $sec.Title) }}
+            {{ $secWeight = index $treeWeights (lower $sec.Title) }}
+          {{ end }}
+        {{ else if gt $sec.Weight 0 }}
+          {{ $secWeight = $sec.Weight }}
+        {{ end }}
+        {{ $sectionItems = $sectionItems | append (dict "sec" $sec "weight" $secWeight "title" (lower (or $sec.Title $sec.Section))) }}
+      {{ end }}
+    {{ end }}
+
+    {{ $weightedSecs := where $sectionItems "weight" "<" 999999 }}
+    {{ $weightedSecs = sort $weightedSecs "weight" "asc" }}
+    {{ $unweightedSecs := where $sectionItems "weight" "==" 999999 }}
+    {{ $unweightedSecs = sort $unweightedSecs "title" "asc" }}
+    {{ $sortedSections := slice }}
+    {{ range $weightedSecs }}{{ $sortedSections = $sortedSections | append . }}{{ end }}
+    {{ range $unweightedSecs }}{{ $sortedSections = $sortedSections | append . }}{{ end }}
+
     {{ range $sortedSections }}
-      {{ $section := . }}
+      {{ $section := .sec }}
       {{ $isCurrentSection := eq $.Section $section.Section }}
       {{ $secIndexNote := "" }}
       {{ range $section.RegularPages }}
@@ -67,27 +222,163 @@
           <span class="section-count">{{ len $section.RegularPages }}</span>
         </div>
 
-        {{/* 2. Sort notes: Weighted (> 0) first in ascending order, then unweighted sorted by filename */}}
-        {{ $weightedPages := where $section.RegularPages "Weight" ">" 0 }}
-        {{ $weightedPages = sort $weightedPages "Weight" "asc" }}
-        {{ $unweightedPages := where $section.RegularPages "Weight" "==" 0 }}
-        {{ $unweightedPages = sort $unweightedPages "File.BaseFileName" "asc" }}
-        {{ $sortedPages := union $weightedPages $unweightedPages }}
+        {{/* ── Separate direct notes and subfolders ─────────────────── */}}
+        {{ $secNorm := lower $section.Section }}
+        {{ $directNoteItems := slice }}
+        {{ $subfoldersMap := dict }}
+
+        {{ range $section.RegularPages }}
+          {{ $page := . }}
+          {{ $bName := $page.File.BaseFileName }}
+          {{ $lName := $page.File.LogicalName }}
+          {{ if not (or (eq $lName "do.not.display.md") (eq $bName "tree.weight") (strings.HasPrefix $bName "tree.weight")) }}
+            {{ $rawDir := lower (replace (strings.TrimRight "/\\" $page.File.Dir) "\\" "/") }}
+            {{/* Check if $rawDir or any ancestor is hidden by do.not.display.md */}}
+            {{ $isPageHidden := false }}
+            {{ if index $hiddenPaths $rawDir }}
+              {{ $isPageHidden = true }}
+            {{ else }}
+              {{ $dirParts := split $rawDir "/" }}
+              {{ $runningPath := "" }}
+              {{ range $dirParts }}
+                {{ if $runningPath }}
+                  {{ $runningPath = printf "%s/%s" $runningPath . }}
+                {{ else }}
+                  {{ $runningPath = . }}
+                {{ end }}
+                {{ if index $hiddenPaths $runningPath }}
+                  {{ $isPageHidden = true }}
+                {{ end }}
+              {{ end }}
+            {{ end }}
+
+            {{ if not $isPageHidden }}
+              {{ $fileWeight := 999999 }}
+              {{ if $hasTreeWeight }}
+                {{/* tree.weight overrides frontmatter weight */}}
+                {{ $relPath := lower (replace $page.File.Path "\\" "/") }}
+                {{ $k1 := lower $lName }}
+                {{ $k2 := lower $bName }}
+                {{ $k3 := lower (or $page.Title "") }}
+                {{ if isset $treeWeights $relPath }}
+                  {{ $fileWeight = index $treeWeights $relPath }}
+                {{ else if isset $treeWeights $k1 }}
+                  {{ $fileWeight = index $treeWeights $k1 }}
+                {{ else if isset $treeWeights $k2 }}
+                  {{ $fileWeight = index $treeWeights $k2 }}
+                {{ else if isset $treeWeights $k3 }}
+                  {{ $fileWeight = index $treeWeights $k3 }}
+                {{ end }}
+              {{ else if gt $page.Weight 0 }}
+                {{ $fileWeight = $page.Weight }}
+              {{ end }}
+
+              {{ $item := dict "page" $page "weight" $fileWeight "title" (lower (or $page.Title $bName)) }}
+
+              {{ if or (eq $rawDir $secNorm) (eq $rawDir (replace $secNorm " " "-")) }}
+                {{ $directNoteItems = $directNoteItems | append $item }}
+              {{ else }}
+                {{ $existingSubList := index $subfoldersMap $rawDir | default slice }}
+                {{ $existingSubList = $existingSubList | append $item }}
+                {{ $subfoldersMap = merge $subfoldersMap (dict $rawDir $existingSubList) }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+
+        {{/* Sort direct notes */}}
+        {{ $wNotes := where $directNoteItems "weight" "<" 999999 }}
+        {{ $wNotes = sort $wNotes "weight" "asc" }}
+        {{ $uNotes := where $directNoteItems "weight" "==" 999999 }}
+        {{ $uNotes = sort $uNotes "title" "asc" }}
+        {{ $sortedDirectPages := slice }}
+        {{ range $wNotes }}{{ $sortedDirectPages = $sortedDirectPages | append . }}{{ end }}
+        {{ range $uNotes }}{{ $sortedDirectPages = $sortedDirectPages | append . }}{{ end }}
 
         <ul class="sidebar-notes-list" style="{{ if $isCurrentSection }}display: block;{{ else }}display: none;{{ end }}">
-          {{ range $sortedPages }}
-            {{ $isPageActive := eq $.RelPermalink .RelPermalink }}
+          {{ range $sortedDirectPages }}
+            {{ $page := .page }}
+            {{ $isPageActive := eq $.RelPermalink $page.RelPermalink }}
             <li class="sidebar-note-item">
-              <a href="{{ .RelPermalink }}" class="sidebar-note-link {{ if $isPageActive }}active{{ end }}">
-                {{ if .Params.icon }}
-                  <i data-lucide="{{ .Params.icon }}" class="sidebar-note-icon"></i>
+              <a href="{{ $page.RelPermalink }}" class="sidebar-note-link {{ if $isPageActive }}active{{ end }}">
+                {{ if $page.Params.icon }}
+                  <i data-lucide="{{ $page.Params.icon }}" class="sidebar-note-icon"></i>
                 {{ else }}
                   <i data-lucide="file-text" class="sidebar-note-icon"></i>
                 {{ end }}
-                <span class="sidebar-note-title">{{ or .Title .File.BaseFileName }}</span>
+                <span class="sidebar-note-title">{{ or $page.Title $page.File.BaseFileName }}</span>
               </a>
             </li>
           {{ end }}
+
+          {{/* ── Sort & Render Subfolders ───────────────────────────── */}}
+          {{ if gt (len $subfoldersMap) 0 }}
+            {{ $subfolderItems := slice }}
+            {{ range $subPath, $subNotes := $subfoldersMap }}
+              {{ $subWeight := 999999 }}
+              {{ if $hasTreeWeight }}
+                {{ if isset $treeWeights $subPath }}
+                  {{ $subWeight = index $treeWeights $subPath }}
+                {{ else }}
+                  {{ $parts := split $subPath "/" }}
+                  {{ $leaf := index $parts (sub (len $parts) 1) }}
+                  {{ if isset $treeWeights $leaf }}
+                    {{ $subWeight = index $treeWeights $leaf }}
+                  {{ end }}
+                {{ end }}
+              {{ end }}
+              {{ $parts := split $subPath "/" }}
+              {{ $leafName := index $parts (sub (len $parts) 1) }}
+              {{ $subfolderItems = $subfolderItems | append (dict "path" $subPath "name" $leafName "weight" $subWeight "notes" $subNotes "title" (lower $leafName)) }}
+            {{ end }}
+
+            {{ $wSubs := where $subfolderItems "weight" "<" 999999 }}
+            {{ $wSubs = sort $wSubs "weight" "asc" }}
+            {{ $uSubs := where $subfolderItems "weight" "==" 999999 }}
+            {{ $uSubs = sort $uSubs "title" "asc" }}
+            {{ $sortedSubs := slice }}
+            {{ range $wSubs }}{{ $sortedSubs = $sortedSubs | append . }}{{ end }}
+            {{ range $uSubs }}{{ $sortedSubs = $sortedSubs | append . }}{{ end }}
+
+            {{ range $sortedSubs }}
+              {{ $sub := . }}
+              {{ $subPath := $sub.path }}
+              {{ $subNotes := $sub.notes }}
+              {{ $wSubNotes := where $subNotes "weight" "<" 999999 }}
+              {{ $wSubNotes = sort $wSubNotes "weight" "asc" }}
+              {{ $uSubNotes := where $subNotes "weight" "==" 999999 }}
+              {{ $uSubNotes = sort $uSubNotes "title" "asc" }}
+              {{ $sortedSubPages := slice }}
+              {{ range $wSubNotes }}{{ $sortedSubPages = $sortedSubPages | append . }}{{ end }}
+              {{ range $uSubNotes }}{{ $sortedSubPages = $sortedSubPages | append . }}{{ end }}
+
+              <li class="sidebar-section-item inner-section-item" data-section="{{ $subPath }}" style="list-style: none; margin-top: 0.35rem;">
+                <div class="sidebar-section-header" onclick="toggleSection(this)" style="padding-left: 0.5rem; font-size: 0.85rem;">
+                  <span class="section-caret"><i data-lucide="chevron-right"></i></span>
+                  <span class="section-icon-wrap"><i data-lucide="folder" class="section-lucide-icon"></i></span>
+                  <span class="section-name" style="cursor: pointer;">{{ humanize $sub.name }}</span>
+                  <span class="section-count">{{ len $sortedSubPages }}</span>
+                </div>
+                <ul class="sidebar-notes-list" style="display: none; padding-left: 1rem;">
+                  {{ range $sortedSubPages }}
+                    {{ $sp := .page }}
+                    {{ $isSPActive := eq $.RelPermalink $sp.RelPermalink }}
+                    <li class="sidebar-note-item">
+                      <a href="{{ $sp.RelPermalink }}" class="sidebar-note-link {{ if $isSPActive }}active{{ end }}">
+                        {{ if $sp.Params.icon }}
+                          <i data-lucide="{{ $sp.Params.icon }}" class="sidebar-note-icon"></i>
+                        {{ else }}
+                          <i data-lucide="file-text" class="sidebar-note-icon"></i>
+                        {{ end }}
+                        <span class="sidebar-note-title">{{ or $sp.Title $sp.File.BaseFileName }}</span>
+                      </a>
+                    </li>
+                  {{ end }}
+                </ul>
+              </li>
+            {{ end }}
+          {{ end }}
+
         </ul>
       </div>
     {{ end }}
@@ -98,6 +389,7 @@
 function toggleSection(headerEl) {
   const item = headerEl.closest('.sidebar-section-item');
   const list = item.querySelector('.sidebar-notes-list');
+  if (!list) return;
   const isOpen = list.style.display === 'block';
   list.style.display = isOpen ? 'none' : 'block';
   item.classList.toggle('is-open', !isOpen);
@@ -105,9 +397,11 @@ function toggleSection(headerEl) {
   // Save opened state to localStorage
   try {
     const secName = item.getAttribute('data-section');
-    const saved = JSON.parse(localStorage.getItem('pedia_open_sections') || '{}');
-    saved[secName] = !isOpen;
-    localStorage.setItem('pedia_open_sections', JSON.stringify(saved));
+    if (secName) {
+      const saved = JSON.parse(localStorage.getItem('pedia_open_sections') || '{}');
+      saved[secName] = !isOpen;
+      localStorage.setItem('pedia_open_sections', JSON.stringify(saved));
+    }
   } catch(e) {}
 }
 
@@ -116,7 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const saved = JSON.parse(localStorage.getItem('pedia_open_sections') || '{}');
     document.querySelectorAll('.sidebar-section-item').forEach(item => {
       const secName = item.getAttribute('data-section');
-      if (saved[secName] === true && !item.classList.contains('is-active-section')) {
+      if (secName && saved[secName] === true && !item.classList.contains('is-active-section')) {
         const list = item.querySelector('.sidebar-notes-list');
         if (list) {
           list.style.display = 'block';
