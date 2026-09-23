@@ -1,7 +1,7 @@
 <header class="site-header">
   <div class="header-container">
     <div class="header-left">
-      {{ $noTopics := or (index .Params "no.topics") (index .Params "notopics") (and .Params.no (index .Params.no "topics")) (eq .Params.notopics true) }}
+      {{ $noTopics := or (index .Params "no.topics") (index .Params "notopics") (index .Params "no-topics") (index .Params "no.topic") (index .Params "notopic") (index .Params "no.sidebar") (index .Params "nosidebar") (index .Params "no.filetree") (and .Params.no (index .Params.no "topics")) (and .Params.no (index .Params.no "sidebar")) (eq .Params.notopics true) }}
       {{ if not $noTopics }}
       <button class="icon-btn sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Sidebar" title="Toggle Sidebar">
         <i data-lucide="panel-left"></i>
@@ -66,6 +66,7 @@
         {{ end }}
       </div>
 
+      {{ if not $noTopics }}
       <div class="mobile-menu-section">
         <span class="mobile-menu-heading">Navigation</span>
         <button class="mobile-drawer-btn" onclick="toggleSidebar(); toggleMobileMenu();">
@@ -73,6 +74,7 @@
           <span>Topics</span>
         </button>
       </div>
+      {{ end }}
     </div>
   </div>
 </header>

@@ -1174,3 +1174,18 @@ img {
 .note-content table tr:nth-child(even) {
   background-color: rgba(128, 128, 128, 0.05) !important;
 }
+
+/* Responsive full-width collapse when right TOC column is omitted */
+.note-body-wrapper.no-toc,
+.note-body-wrapper:not(:has(.toc-wrapper)),
+.has-no-toc .note-body-wrapper {
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+}
+.note-body-wrapper.no-toc .note-content,
+.note-body-wrapper:not(:has(.toc-wrapper)) .note-content,
+.has-no-toc .note-body-wrapper .note-content {
+  padding-right: 0 !important;
+  max-width: 100% !important;
+}
+

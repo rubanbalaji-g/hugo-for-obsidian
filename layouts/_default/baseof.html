@@ -6,8 +6,8 @@
 <body class="theme-dark">
   {{ partial "header.html" . }}
   
-  {{ $noTopics := or (index .Params "no.topics") (index .Params "notopics") (and .Params.no (index .Params.no "topics")) (eq .Params.notopics true) }}
-  <div class="site-layout has-sidebar{{ if $noTopics }} sidebar-collapsed no-sidebar{{ end }}" id="site-layout">
+  {{ $noTopics := or (index .Params "no.topics") (index .Params "notopics") (index .Params "no-topics") (index .Params "no.topic") (index .Params "notopic") (index .Params "no.sidebar") (index .Params "nosidebar") (index .Params "no.filetree") (and .Params.no (index .Params.no "topics")) (and .Params.no (index .Params.no "sidebar")) (eq .Params.notopics true) }}
+  <div class="site-layout{{ if not $noTopics }} has-sidebar{{ else }} no-sidebar sidebar-collapsed{{ end }}" id="site-layout">
     {{ if not $noTopics }}
       {{ partial "sidebar.html" . }}
     {{ end }}

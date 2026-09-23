@@ -1,4 +1,4 @@
-{{ $noContents := or (index .Params "no.contents") (index .Params "nocontents") (and .Params.no (index .Params.no "contents")) (eq .Params.nocontents true) }}
+{{ $noContents := or (index .Params "no.contents") (index .Params "nocontents") (index .Params "no-contents") (index .Params "no.content") (index .Params "nocontent") (index .Params "no-content") (and .Params.no (index .Params.no "contents")) (and .Params.no (index .Params.no "content")) (eq .Params.nocontents true) }}
 {{ if and (not $noContents) .TableOfContents (ne .TableOfContents "<nav id=\"TableOfContents\"></nav>") }}
 <aside class="toc-wrapper">
   <div class="toc-header">

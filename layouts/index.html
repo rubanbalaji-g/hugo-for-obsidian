@@ -1,7 +1,8 @@
 {{ define "main" }}
-<div class="note-container home-container">
+{{ $noContents := or (index .Params "no.contents") (index .Params "nocontents") (index .Params "no-contents") (index .Params "no.content") (index .Params "nocontent") (index .Params "no-content") (and .Params.no (index .Params.no "contents")) (and .Params.no (index .Params.no "content")) (eq .Params.nocontents true) }}
+<div class="note-container home-container{{ if $noContents }} has-no-toc{{ end }}">
   <article class="clinical-note">
-    <div class="note-body-wrapper">
+    <div class="note-body-wrapper{{ if $noContents }} no-toc{{ end }}">
       <div class="note-content cm-s-obsidian">
         {{ partial "obsidian-content.html" . }}
         {{ partial "footer.html" . }}
