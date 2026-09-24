@@ -169,6 +169,11 @@ body.theme-dark .moon-icon { display: none; }
 }
 .note-content p { margin-bottom: 1.2rem; }
 .note-content ul, .note-content ol { margin: 0 0 1.2rem 1.6rem; }
+.note-content ol { list-style-type: decimal; }
+.note-content ol ol,
+.callout-content ol ol { list-style-type: lower-alpha; }
+.note-content ol ol ol,
+.callout-content ol ol ol { list-style-type: lower-roman; }
 .note-content li { margin-bottom: 0.4rem; }
 
 /* Internal Wikilinks */

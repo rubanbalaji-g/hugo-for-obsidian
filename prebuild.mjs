@@ -103,6 +103,46 @@ function processDirectory(dir, isRoot = false) {
   }
 }
 
+const CODE_BLOCK_RE = /(```[\s\S]*?```)|(`[^`\n]+`)/g;
+const INDENTED_SUBLIST_RE = /^(\s*(?:>\s*)*\s+)(?:[a-zA-Z]|[ivxIVX]{1,4})\.\s+(.*)$/gm;
+
+function normalizeSublistsInFile(filePath) {
+  const original = fs.readFileSync(filePath, 'utf8');
+  let matchCount = 0;
+
+  const codeBlocks = [];
+  let sanitized = original.replace(CODE_BLOCK_RE, (match) => {
+    codeBlocks.push(match);
+    return `%%%CODE_BLOCK_PRESERVE_${codeBlocks.length - 1}%%%`;
+  });
+
+  sanitized = sanitized.replace(INDENTED_SUBLIST_RE, (match, prefix, text) => {
+    matchCount++;
+    return `${prefix}1. ${text}`;
+  });
+
+  if (matchCount > 0) {
+    sanitized = sanitized.replace(/%%%CODE_BLOCK_PRESERVE_(\d+)%%%/g, (_, idx) => codeBlocks[Number(idx)]);
+    fs.writeFileSync(filePath, sanitized, 'utf8');
+    console.log(`[prebuild] Normalized ${matchCount} sublist item(s) in "${path.basename(filePath)}"`);
+  }
+}
+
+function normalizeAllMarkdownFiles(dir) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (entry.name.startsWith('.') || entry.name === 'node_modules') continue;
+      normalizeAllMarkdownFiles(fullPath);
+    } else if (entry.isFile() && entry.name.endsWith('.md')) {
+      normalizeSublistsInFile(fullPath);
+    }
+  }
+}
+
 console.log('[prebuild] Normalizing index notes in content/...');
 processDirectory(contentDir, true);
+console.log('[prebuild] Normalizing indented sublists in content/...');
+normalizeAllMarkdownFiles(contentDir);
 console.log('[prebuild] Normalization complete.');
