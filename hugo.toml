@@ -1,6 +1,6 @@
 baseURL = "https://example.com/"
 locale = "en"
-title = "My Digital Garden"
+title = "Hugo Homepage"
 ignoreFiles = ['do\.not\.display\.md$', 'tree\.weight.*$']
 [pagination]
   pagerSize = 50
@@ -9,9 +9,14 @@ pluralizeListTitles = false
 [params]
   description = "A fast, modern knowledge base synced directly from Obsidian."
   author = "Your Name"
-  siteName = "Digital Garden"
+  siteName = "Hugo Homepage"
   accentColor = "#00a868"
   baseTheme = "dark"
+  favicon = ""
+  logo = ""
+  siteIcon = ""
+  footerFormat = "markdown"
+  footerContent = ""
 
 [[params.navLinks]]
   name = "Home"

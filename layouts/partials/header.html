@@ -10,11 +10,11 @@
 
       <a href="{{ "/" | relURL }}" class="brand-link">
         {{ if site.Params.logo }}
-        <img src="{{ site.Params.logo | relURL }}" alt="{{ site.Title }} Logo" class="brand-logo" width="28" height="28">
-        {{ else }}
-        <i data-lucide="book-open" class="brand-icon" style="width: 24px; height: 24px; color: var(--accent);"></i>
+        <img src="{{ site.Params.logo | relURL }}" alt="{{ site.Title | default "Hugo Homepage" }} Logo" class="brand-logo" width="28" height="28">
+        {{ else if site.Params.siteIcon }}
+        <i data-lucide="{{ site.Params.siteIcon }}" class="brand-icon" style="width: 24px; height: 24px; color: var(--accent);"></i>
         {{ end }}
-        <span class="brand-title">{{ site.Title }}</span>
+        <span class="brand-title">{{ site.Title | default "Hugo Homepage" }}</span>
       </a>
 
       <!-- Desktop Navigation Links -->

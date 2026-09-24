@@ -1,23 +1,39 @@
-{{ $pageTitle := or .Title .File.BaseFileName site.Title }}
+{{ $siteTitle := site.Title | default "Hugo Homepage" }}
+{{ $pageTitle := or .Title .File.BaseFileName $siteTitle }}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{ $pageTitle }} — {{ site.Title }}</title>
+<title>{{ $pageTitle }} — {{ $siteTitle }}</title>
 
 <!-- Canonical & SEO -->
 <link rel="canonical" href="{{ .Permalink }}">
 <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description }}{{ end }}">
-<meta property="og:site_name" content="{{ site.Title }}">
-<meta property="og:title" content="{{ $pageTitle }} — {{ site.Title }}">
+<meta property="og:site_name" content="{{ $siteTitle }}">
+<meta property="og:title" content="{{ $pageTitle }} — {{ $siteTitle }}">
 <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description }}{{ end }}">
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
-<meta property="og:image" content="{{ "/logo.svg" | absURL }}">
+{{ with site.Params.logo }}
+<meta property="og:image" content="{{ . | absURL }}">
+{{ end }}
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="{{ $pageTitle }} — {{ site.Title }}">
+<meta name="twitter:title" content="{{ $pageTitle }} — {{ $siteTitle }}">
 <meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description }}{{ end }}">
 
-<!-- Favicon -->
-<link rel="icon" href="{{ "/favicon.svg" | relURL }}" type="image/svg+xml">
+<!-- Favicon (Strictly conditional - omitted if blank) -->
+{{ with site.Params.favicon }}
+  {{ $favExt := path.Ext . | lower }}
+  {{ $favType := "image/x-icon" }}
+  {{ if eq $favExt ".svg" }}{{ $favType = "image/svg+xml" }}
+  {{ else if eq $favExt ".png" }}{{ $favType = "image/png" }}
+  {{ else if or (eq $favExt ".jpg") (eq $favExt ".jpeg") }}{{ $favType = "image/jpeg" }}
+  {{ else if eq $favExt ".webp" }}{{ $favType = "image/webp" }}
+  {{ else if eq $favExt ".gif" }}{{ $favType = "image/gif" }}
+  {{ end }}
+  <link rel="icon" href="{{ . | relURL }}" type="{{ $favType }}">
+  {{ if ne $favExt ".svg" }}
+  <link rel="apple-touch-icon" href="{{ . | relURL }}">
+  {{ end }}
+{{ end }}
 
 <!-- Typography -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
